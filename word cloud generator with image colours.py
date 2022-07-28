@@ -10,16 +10,16 @@ directory = os.path.dirname(__file__) if "__file__" in locals() else os.getcwd()
 #load text
 textfile = open(os.path.join(directory, r'Text\BA - Political Transformation and the mass media.txt'), encoding="utf-8").read()
 
-image_colour = np.array(Image.open(os.path.join(directory,r'Pictures\Flag_of_Russia.png')))
+image_colour = np.array(Image.open(os.path.join(directory,r'Pictures\flag of the russian federation.png')))
 
 removed_words = STOPWORDS
 
 cloud = WordCloud(
     mode = "RGBA",
-    background_color=None,
+    background_color='black',
     stopwords=removed_words,
-    height = 600,
-    width = 400,
+    height = 1280,
+    width = 1920,
     min_word_length= 3,
     max_words= 200
 )

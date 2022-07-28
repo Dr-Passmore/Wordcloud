@@ -1,7 +1,11 @@
 import matplotlib.pyplot as plt
 from wordcloud import WordCloud, STOPWORDS
 
-words = open('Corbyn Conference Speeches 2015-2019.txt', mode = 'r', encoding='utf-8').read()
+textfile = 'Corbyn Conference Speeches 2015-2019.txt'
+
+output = 'Corbyn Conference Speech Output.png'
+
+words = open(textfile, mode = 'r', encoding='utf-8').read()
 
 removed_words = STOPWORDS
 
@@ -16,4 +20,4 @@ cloud = WordCloud(
 
 cloud.generate(words)
 
-cloud.to_file('Corbyn Conference Speech Output.png')
+cloud.to_file(output)

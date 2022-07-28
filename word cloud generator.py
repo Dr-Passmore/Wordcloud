@@ -1,7 +1,5 @@
 import matplotlib.pyplot as plt
-from pygame import CONTROLLER_BUTTON_Y
 from wordcloud import WordCloud, STOPWORDS
-import sys, os
 
 words = open('Corbyn Conference Speeches 2015-2019.txt', mode = 'r', encoding='utf-8').read()
 

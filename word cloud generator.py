@@ -1,9 +1,9 @@
 import matplotlib.pyplot as plt
 from wordcloud import WordCloud, STOPWORDS
 
-textfile = 'Corbyn Conference Speeches 2015-2019.txt'
+textfile = 'Text\Journalistic norms.txt'
 
-output = 'Corbyn Conference Speech Output.png'
+output = 'WordClouds\Masters Dissertation.png' 
 
 words = open(textfile, mode = 'r', encoding='utf-8').read()
 
@@ -15,7 +15,7 @@ cloud = WordCloud(
     height = 600,
     width = 400,
     min_word_length= 4,
-    max_words= 100
+    max_words= 200
 )
 
 cloud.generate(words)

@@ -17,14 +17,8 @@ class wordCloud:
         self.Image = None
         self.stopwords = STOPWORDS
         self.mask = None
-        self.cloud = None
-        
-        #wordCloud.selectImage(self)
-        
-        
-        #wordCloud.testRun(self)   
+        self.cloud = None  
         wordCloud.userInterface(self)  
-        #wordCloud.previewCloud(self)
         
     def userInterface(self):
         root = tk.Tk()
@@ -32,22 +26,17 @@ class wordCloud:
         #root.configure(background="light green")
         root.geometry("600x480")
         title = tk.Label(text="Word Cloud Generator")
-        
         button_preview = tk.Button(
             root, 
             text = "Preview", 
             command = lambda : wordCloud.previewCloud(self)
             )
-        
         button_save = tk.Button(
             root,
             text = "Save",
             command = lambda : wordCloud.saveWordcloud(self)
         )
-        
         self.saveName = tk.Entry(root)
-        
-        
         title.pack()
         #selectFile.pack() 
         button_preview.pack()
@@ -66,6 +55,8 @@ class wordCloud:
             title = "Select Text File",
             filetypes = (("text files", "txt"),)
             )
+        self.textFile = selectFile
+        return self.textFile
     
     def cloudShape(Self):
         print("test")
@@ -84,7 +75,6 @@ class wordCloud:
             max_words= 200
         )
         self.cloud.generate(self.textFile)
-        
         return self.cloud
         
     def previewCloud(self):   
@@ -111,11 +101,14 @@ class wordCloud:
         else:
             self.outputImage = "WordClouds\\" + self.outputImage + ".png"
         print(self.outputImage)
+        #Checks to make sure cloud has been generated
         if self.cloud is None:
+            #if cloud has been created without using preview it will generate a word cloud
             wordCloud.generateCloud(self)
         else:
             logging.info("Cloud already generated")
         self.cloud.to_file(self.outputImage)
+        #Resets the Cloud once saved
         self.cloud = None
     
     def testRun(self):

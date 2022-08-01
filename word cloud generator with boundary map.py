@@ -7,7 +7,7 @@ import os
 
 directory = os.path.dirname(__file__) if "__file__" in locals() else os.getcwd()
 #load text
-textfile = open(os.path.join(directory, r'Text\HP book 1.txt'), encoding="utf-8").read()
+textfile = open(os.path.join(directory, r'Text\PhD thesis.txt'), encoding="utf-8").read()
 
 # load image
 image = np.array(Image.open(os.path.join(directory,r'Pictures\Cat_Silhouette_PNG_Transparent_Clip_Art_Image.png')))
@@ -27,7 +27,7 @@ image_mask[edges > 0.8] = 255
 removed_words = STOPWORDS
 cloud = WordCloud(
     mode = "RGBA",
-    background_color='green',
+    background_color=None,
     stopwords=removed_words,
     mask=image_mask,
     height = 1280,
@@ -43,6 +43,6 @@ plt.figure(figsize=(10, 10))
 plt.imshow(cloud, interpolation="bilinear")
 
 
-output = r'WordClouds\HP 1 test.png' 
+output = r'WordClouds\PhD.png' 
 cloud.to_file(output)
 

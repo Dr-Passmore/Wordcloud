@@ -5,7 +5,7 @@ import numpy as np
 from scipy.ndimage import gaussian_gradient_magnitude
 import os
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import messagebox, filedialog
 import logging
 
 class wordCloud:
@@ -17,12 +17,14 @@ class wordCloud:
         self.Image = None
         self.stopwords = STOPWORDS
         self.mask = None
+        self.cloud = None
+        
         #wordCloud.selectImage(self)
         
         
         #wordCloud.testRun(self)   
-        #wordCloud.userInterface(self)  
-        wordCloud.previewCloud(self)
+        wordCloud.userInterface(self)  
+        #wordCloud.previewCloud(self)
         
     def userInterface(self):
         root = tk.Tk()
@@ -30,7 +32,27 @@ class wordCloud:
         #root.configure(background="light green")
         root.geometry("600x480")
         title = tk.Label(text="Word Cloud Generator")
+        
+        button_preview = tk.Button(
+            root, 
+            text = "Preview", 
+            command = lambda : wordCloud.previewCloud(self)
+            )
+        
+        button_save = tk.Button(
+            root,
+            text = "Save",
+            command = lambda : wordCloud.saveWordcloud(self)
+        )
+        
+        self.saveName = tk.Entry(root)
+        
+        
         title.pack()
+        #selectFile.pack() 
+        button_preview.pack()
+        self.saveName.pack()
+        button_save.pack()
         root.mainloop()
     
     def selectImage(self):
@@ -39,7 +61,11 @@ class wordCloud:
         print (self.stopwords)
     
     def selectText(self):
-        print("test")
+        selectFile = filedialog.askopenfilename(
+            initialdir = r"/Text/",
+            title = "Select Text File",
+            filetypes = (("text files", "txt"),)
+            )
     
     def cloudShape(Self):
         print("test")
@@ -75,7 +101,22 @@ class wordCloud:
             #for ax in axes:
                 #ax.set_axis_off()
             plt.show()
-        print("test") 
+        
+        
+    def saveWordcloud(self):
+        
+        self.outputImage = self.saveName.get()
+        if self.outputImage == "":
+            self.outputImage = "WordClouds\CloudKicker.png"
+        else:
+            self.outputImage = "WordClouds\\" + self.outputImage + ".png"
+        print(self.outputImage)
+        if self.cloud is None:
+            wordCloud.generateCloud(self)
+        else:
+            logging.info("Cloud already generated")
+        self.cloud.to_file(self.outputImage)
+        self.cloud = None
     
     def testRun(self):
         self.textFile = open(os.path.join(self.directory, r'Text\Corbyn Conference Speeches 2015-2019.txt'), encoding="utf-8").read()

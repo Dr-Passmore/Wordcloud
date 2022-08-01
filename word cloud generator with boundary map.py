@@ -43,6 +43,6 @@ plt.figure(figsize=(10, 10))
 plt.imshow(cloud, interpolation="bilinear")
 
 
-output = r'WordClouds\HP 1.png' 
+output = r'WordClouds\HP 1 test.png' 
 cloud.to_file(output)
 

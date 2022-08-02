@@ -10,15 +10,20 @@ import logging
 
 class wordCloud:
     def __init__(self):
-        print("hello world")
         self.directory = os.path.dirname(__file__) if "__file__" in locals() else os.getcwd()
+        #Checks to make sure Folders exist and if not creates them
+        if not os.path.exists(r'Pictures'):
+            os.makedirs(r'Pictures')
+        if not os.path.exists(r'Text'):
+            os.makedirs(r'Text')
+        if not os.path.exists(r'WordClouds'):
+            os.makedirs(r'WordClouds')
         self.textFile = open(os.path.join(self.directory, r'Text\Corbyn Conference Speeches 2015-2019.txt'), encoding="utf-8").read()
         self.outputImage = None
         self.Image = None
         self.stopwords = STOPWORDS
         self.image_mask = None
         self.cloud = None
-        self.image_colours = None  
         wordCloud.userInterface(self)  
         
     def userInterface(self):
@@ -54,9 +59,13 @@ class wordCloud:
         self.root.mainloop()
     
     def selectImage(self):
-        number = 1
-        print(number)
-        print (self.stopwords)
+        selectImage = filedialog.askopenfilename(
+            initialdir = r"Pictures",
+            title = "Select Image File",
+            filetypes = (("Image files", "png"),)
+        )
+        self.Image =selectImage
+        return self.Image
     
     def selectText(self):
         selectFile = filedialog.askopenfilename(
@@ -67,10 +76,10 @@ class wordCloud:
         self.textFile = selectFile
         return self.textFile
     
-    def cloudShape(Self):
+    def cloudShape(self):
         print("test")
         self.image_mask = self.Image.copy()
-        self.image_mask[image_mask.sum(axis=2)==0] = 255
+        self.image_mask[self.image_mask.sum(axis=2)==0] = 255
         edges = np.mean([gaussian_gradient_magnitude(self.image[:, :, i]/255., 2) for i in range(3)], axis = 0)
         self.image_mask[edges > 0.8] = 255
         return self.image_mask

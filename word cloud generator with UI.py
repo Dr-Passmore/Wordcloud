@@ -16,33 +16,42 @@ class wordCloud:
         self.outputImage = None
         self.Image = None
         self.stopwords = STOPWORDS
-        self.mask = None
-        self.cloud = None  
+        self.image_mask = None
+        self.cloud = None
+        self.image_colours = None  
         wordCloud.userInterface(self)  
         
     def userInterface(self):
-        root = tk.Tk()
-        root.title("Word Cloud Generator")
+        self.root = tk.Tk()
+        self.root.title("Word Cloud Generator")
         #root.configure(background="light green")
-        root.geometry("600x480")
+        self.root.geometry("600x480")
         title = tk.Label(text="Word Cloud Generator")
         button_preview = tk.Button(
-            root, 
+            self.root, 
             text = "Preview", 
             command = lambda : wordCloud.previewCloud(self)
             )
         button_save = tk.Button(
-            root,
+            self.root,
             text = "Save",
             command = lambda : wordCloud.saveWordcloud(self)
         )
-        self.saveName = tk.Entry(root)
+        button_exit = tk.Button(
+            self.root,
+            text = "Exit",
+            command = lambda : wordCloud.exit(self)
+        )
+        name = tk.Label(text="Save Image As ")
+        self.saveName = tk.Entry(self.root)
         title.pack()
         #selectFile.pack() 
         button_preview.pack()
+        name.pack()
         self.saveName.pack()
         button_save.pack()
-        root.mainloop()
+        button_exit.pack()
+        self.root.mainloop()
     
     def selectImage(self):
         number = 1
@@ -60,7 +69,17 @@ class wordCloud:
     
     def cloudShape(Self):
         print("test")
-        
+        self.image_mask = self.Image.copy()
+        self.image_mask[image_mask.sum(axis=2)==0] = 255
+        edges = np.mean([gaussian_gradient_magnitude(self.image[:, :, i]/255., 2) for i in range(3)], axis = 0)
+        self.image_mask[edges > 0.8] = 255
+        return self.image_mask
+    
+    def cloudRecolour(self):
+        self.image_colours = ImageColorGenerator(self.Image)
+        self.cloud.recolor(color_func=self.image_colours)
+        return self.cloud
+    
     def generateCloud(self):
         logging.info("Cloud Generation with the follow text file - " + self.textFile)
         # !! Prints the entire txt file. Update to just show file name
@@ -70,7 +89,7 @@ class wordCloud:
             stopwords=self.stopwords,
             height = 1280,
             width = 1920,
-            mask = self.mask,
+            mask = self.image_mask,
             min_word_length= 3,
             max_words= 200
         )
@@ -84,7 +103,6 @@ class wordCloud:
             messagebox.showerror("Text File Error", "No Text File Selected")
         else:
             wordCloud.generateCloud(self)
-            
             fig, axes = plt.subplots(1,1)
             axes.imshow(self.cloud, interpolation="bilinear")
             axes.set_axis_off()
@@ -92,12 +110,10 @@ class wordCloud:
                 #ax.set_axis_off()
             plt.show()
         
-        
     def saveWordcloud(self):
-        
         self.outputImage = self.saveName.get()
         if self.outputImage == "":
-            self.outputImage = "WordClouds\CloudKicker.png"
+            self.outputImage = "WordClouds\Clear Skies.png"
         else:
             self.outputImage = "WordClouds\\" + self.outputImage + ".png"
         print(self.outputImage)
@@ -111,6 +127,9 @@ class wordCloud:
         #Resets the Cloud once saved
         self.cloud = None
     
+    def exit(self):
+        self.root.destroy()
+        
     def testRun(self):
         self.textFile = open(os.path.join(self.directory, r'Text\Corbyn Conference Speeches 2015-2019.txt'), encoding="utf-8").read()
         wordCloud.generateCloud(self)

@@ -5,7 +5,7 @@ import numpy as np
 from scipy.ndimage import gaussian_gradient_magnitude
 import os
 import tkinter as tk
-from tkinter import messagebox, filedialog
+from tkinter import BooleanVar, messagebox, filedialog, IntVar, Checkbutton
 import logging
 
 class wordCloud:
@@ -47,11 +47,34 @@ class wordCloud:
             text = "Exit",
             command = lambda : wordCloud.exit(self)
         )
+        
+        self.recolour = IntVar()
+        checkRecolour = Checkbutton(
+            self.root,
+            text = "Recolour Text", 
+            variable = self.recolour, 
+            onvalue = 1, 
+            offvalue = 0, 
+            height=5, 
+            width = 20)
+        
+        self.shapeCloud = IntVar()
+        checkShape = Checkbutton(
+            self.root,
+            text = "Use Image Boundary Map",
+            onvalue = 1, 
+            offvalue = 0,
+            height = 5,
+            width = 20)
+        
         name = tk.Label(text="Save Image As ")
         self.saveName = tk.Entry(self.root)
+        self.saveName.insert(0, "Clear Skies")
         title.pack()
         #selectFile.pack() 
         button_preview.pack()
+        checkRecolour.pack()
+        checkShape.pack()
         name.pack()
         self.saveName.pack()
         button_save.pack()
@@ -77,7 +100,6 @@ class wordCloud:
         return self.textFile
     
     def cloudShape(self):
-        print("test")
         self.image_mask = self.Image.copy()
         self.image_mask[self.image_mask.sum(axis=2)==0] = 255
         edges = np.mean([gaussian_gradient_magnitude(self.image[:, :, i]/255., 2) for i in range(3)], axis = 0)
@@ -124,8 +146,7 @@ class wordCloud:
         if self.outputImage == "":
             self.outputImage = "WordClouds\Clear Skies.png"
         else:
-            self.outputImage = "WordClouds\\" + self.outputImage + ".png"
-        print(self.outputImage)
+            self.outputImage = "WordClouds\\{}.png".format(self.outputImage)
         #Checks to make sure cloud has been generated
         if self.cloud is None:
             #if cloud has been created without using preview it will generate a word cloud

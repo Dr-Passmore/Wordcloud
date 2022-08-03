@@ -102,7 +102,11 @@ class wordCloud:
     
     def checkboxStatus(self):
         logging.info('Checking whether tick boxes are selected')
-        
+        self.shapecloudCheck = self.shapeCloud.get()
+        self.recolouredCheck = self.recolour.get()
+        self.numberTicked = self.shapecloudCheck + self.recolouredCheck
+        print(self.numberTicked)
+        return self.numberTicked
     
     def cloudShape(self):
         if self.Image is None:
@@ -126,6 +130,7 @@ class wordCloud:
     
     def generateCloud(self):
         logging.info("Cloud Generation checking the Text File Selected")
+        wordCloud.checkboxStatus(self)
         if self.textFile is None:
             logging.warn('No .txt file selected')
             messagebox.showerror("Text File Error", "No Text File Selected")

@@ -32,7 +32,7 @@ class wordCloud:
         self.root = tk.Tk()
         self.root.title("Word Cloud Generator")
         #root.configure(background="light green")
-        self.root.geometry("600x480")
+        self.root.geometry("1000x800")
         title = tk.Label(text="Word Cloud Generator")
         button_preview = tk.Button(
             self.root, 
@@ -107,7 +107,6 @@ class wordCloud:
         self.shapecloudCheck = self.shapeCloud.get()
         self.recolouredCheck = self.recolour.get()
         self.numberTicked = self.shapecloudCheck + self.recolouredCheck
-        print(self.numberTicked)
         return self.numberTicked
     
     def cloudShape(self):
@@ -115,7 +114,6 @@ class wordCloud:
             logging.warn('No .png file selected')
             messagebox.showerror("Image File Error", "No Image File Selected")
         else:
-            print(self.Image)
             self.processedImage = np.array(Image.open(os.path.join(self.Image)))
             self.processedImage = self.processedImage[::3, ::3]
             self.image_mask = self.processedImage.copy()
@@ -135,7 +133,20 @@ class wordCloud:
             return self.cloud
     
     def recolourShape(self):
-        print ("woo")
+        if self.Image is None:
+            logging.warn('No .png file selected')
+            messagebox.showerror("Image File Error", "No Image File Selected")
+        else:
+            self.processedImage = np.array(Image.open(os.path.join(self.Image)))
+            self.processedImage = self.processedImage[::3, ::3]
+            self.image_mask = self.processedImage.copy()
+            self.image_mask[self.image_mask.sum(axis=2)==0] = 255
+            edges = np.mean([gaussian_gradient_magnitude(self.processedImage[:, :, i]/255., 2) for i in range(3)], axis = 0)
+            self.image_mask[edges > 0.8] = 255
+            wordCloud.generateCloud(self)
+            self.image_colours = ImageColorGenerator(self.processedImage)
+            self.cloud.recolor(color_func=self.image_colours)
+            return self.cloud
         
     def generateCloud(self):
         logging.info("Cloud Generation checking the Text File Selected")
@@ -190,9 +201,9 @@ class wordCloud:
         elif self.numberTicked == 2:
             
             wordCloud.recolourShape(self)
-            #fig, axes = plt.subplots(1, 1)
-            #axes.imshow(self.cloud, interpolation="bilinear")
-            #axes.set_axis_off()
+            fig, axes = plt.subplots(1, 1)
+            axes.imshow(self.cloud, interpolation="bilinear")
+            axes.set_axis_off()
         plt.show()
         
     def saveWordcloud(self):

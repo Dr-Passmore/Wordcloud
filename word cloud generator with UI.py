@@ -134,6 +134,9 @@ class wordCloud:
             self.cloud.recolor(color_func=self.image_colours)
             return self.cloud
     
+    def recolourShape(self):
+        print ("woo")
+        
     def generateCloud(self):
         logging.info("Cloud Generation checking the Text File Selected")
         wordCloud.checkboxStatus(self)
@@ -160,6 +163,7 @@ class wordCloud:
         wordCloud.checkboxStatus(self)
         
         if self.numberTicked == 0:
+            self.image_mask = None
             wordCloud.generateCloud(self)
             fig, axes = plt.subplots(1,1)
             axes.imshow(self.cloud, interpolation="bilinear")
@@ -184,12 +188,11 @@ class wordCloud:
                 axes.imshow(self.cloud, interpolation="bilinear")
                 axes.set_axis_off()
         elif self.numberTicked == 2:
-            wordCloud.cloudShape(self)
-            fig, axes = plt.subplots(1, 1)
-            wordCloud.generateCloud(self)
-            wordCloud.cloudRecolour(self)
-            axes.imshow(self.cloud, interpolation="bilinear")
-            axes.set_axis_off()
+            
+            wordCloud.recolourShape(self)
+            #fig, axes = plt.subplots(1, 1)
+            #axes.imshow(self.cloud, interpolation="bilinear")
+            #axes.set_axis_off()
         plt.show()
         
     def saveWordcloud(self):

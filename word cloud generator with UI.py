@@ -1,3 +1,5 @@
+from configparser import Interpolation
+from matplotlib import image
 from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator
 import matplotlib.pyplot as plt
 from PIL import Image
@@ -20,7 +22,7 @@ class wordCloud:
             os.makedirs(r'WordClouds')
         self.textFile = open(os.path.join(self.directory, r'Text\Corbyn Conference Speeches 2015-2019.txt'), encoding="utf-8").read()
         self.outputImage = None
-        self.Image = None
+        self.Image = 'Pictures\\flag of the russian federation.png'
         self.stopwords = STOPWORDS
         self.image_mask = None
         self.cloud = None
@@ -88,8 +90,8 @@ class wordCloud:
             title = "Select Image File",
             filetypes = (("Image files", "png"),)
         )
-        self.Image =selectImage
-        return self.Image
+        self.ImageName =selectImage
+        return self.ImageName
     
     def selectText(self):
         selectFile = filedialog.askopenfilename(
@@ -113,6 +115,7 @@ class wordCloud:
             logging.warn('No .png file selected')
             messagebox.showerror("Image File Error", "No Image File Selected")
         else:
+            self.Image = np.array(Image.open(os.path.join(self.Image)))
             self.image_mask = self.Image.copy()
             self.image_mask[self.image_mask.sum(axis=2)==0] = 255
             edges = np.mean([gaussian_gradient_magnitude(self.image[:, :, i]/255., 2) for i in range(3)], axis = 0)
@@ -124,6 +127,7 @@ class wordCloud:
             logging.warn('No .png file selected')
             messagebox.showerror("Image File Error", "No Image File Selected")
         else:
+            self.Image = np.array(Image.open(os.path.join(self.Image)))
             self.image_colours = ImageColorGenerator(self.Image)
             self.cloud.recolor(color_func=self.image_colours)
             return self.cloud
@@ -152,12 +156,25 @@ class wordCloud:
     def previewCloud(self):   
         logging.info("Preview Cloud Selected")
         wordCloud.generateCloud(self)
-        #checkboxValue = self.recolour + self.shapeCloud
-        fig, axes = plt.subplots(1,1)
-        axes.imshow(self.cloud, interpolation="bilinear")
-        axes.set_axis_off()
-        #for ax in axes:
-            #ax.set_axis_off()
+        if self.numberTicked == 0:
+            fig, axes = plt.subplots(1,1)
+            axes.imshow(self.cloud, interpolation="bilinear")
+            axes.set_axis_off()
+            
+        elif self.numberTicked == 1:
+            fig, axes = plt.subplots(1, 2)
+            axes[0].imshow(self.cloud, interpolation="bilinear")
+            if self.recolouredCheck == 1:
+                wordCloud.cloudRecolour(self)
+                axes[1].imshow(self.cloud, interpolation="bilinear")
+                for ax in axes:
+                    ax.set_axis_off()
+            else:
+                wordCloud.cloudShape(self)
+                wordCloud.generateCloud(self)
+                axes[1].imshow(self.cloud, interpolation="bilinear")
+                for ax in axes:
+                    ax.set_axis_off()
         plt.show()
         
     def saveWordcloud(self):

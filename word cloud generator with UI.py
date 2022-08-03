@@ -5,7 +5,7 @@ import numpy as np
 from scipy.ndimage import gaussian_gradient_magnitude
 import os
 import tkinter as tk
-from tkinter import BooleanVar, messagebox, filedialog, IntVar, Checkbutton
+from tkinter import messagebox, filedialog, IntVar, Checkbutton
 import logging
 
 class wordCloud:
@@ -55,16 +55,17 @@ class wordCloud:
             variable = self.recolour, 
             onvalue = 1, 
             offvalue = 0, 
-            height=5, 
+            height=2, 
             width = 20)
         
         self.shapeCloud = IntVar()
         checkShape = Checkbutton(
             self.root,
             text = "Use Image Boundary Map",
+            variable= self.shapeCloud,
             onvalue = 1, 
             offvalue = 0,
-            height = 5,
+            height = 2,
             width = 20)
         
         name = tk.Label(text="Save Image As ")
@@ -99,54 +100,64 @@ class wordCloud:
         self.textFile = selectFile
         return self.textFile
     
+    def checkboxStatus(self):
+        logging.info('Checking whether tick boxes are selected')
+        
+    
     def cloudShape(self):
-        self.image_mask = self.Image.copy()
-        self.image_mask[self.image_mask.sum(axis=2)==0] = 255
-        edges = np.mean([gaussian_gradient_magnitude(self.image[:, :, i]/255., 2) for i in range(3)], axis = 0)
-        self.image_mask[edges > 0.8] = 255
-        return self.image_mask
+        if self.Image is None:
+            logging.warn('No .png file selected')
+            messagebox.showerror("Image File Error", "No Image File Selected")
+        else:
+            self.image_mask = self.Image.copy()
+            self.image_mask[self.image_mask.sum(axis=2)==0] = 255
+            edges = np.mean([gaussian_gradient_magnitude(self.image[:, :, i]/255., 2) for i in range(3)], axis = 0)
+            self.image_mask[edges > 0.8] = 255
+            return self.image_mask
     
     def cloudRecolour(self):
-        self.image_colours = ImageColorGenerator(self.Image)
-        self.cloud.recolor(color_func=self.image_colours)
-        return self.cloud
+        if self.Image is None:
+            logging.warn('No .png file selected')
+            messagebox.showerror("Image File Error", "No Image File Selected")
+        else:
+            self.image_colours = ImageColorGenerator(self.Image)
+            self.cloud.recolor(color_func=self.image_colours)
+            return self.cloud
     
     def generateCloud(self):
-        logging.info("Cloud Generation with the follow text file - " + self.textFile)
-        # !! Prints the entire txt file. Update to just show file name
-        self.cloud = WordCloud(
-            mode = "RGBA",
-            background_color=None,
-            stopwords=self.stopwords,
-            height = 1280,
-            width = 1920,
-            mask = self.image_mask,
-            min_word_length= 3,
-            max_words= 200
-        )
-        self.cloud.generate(self.textFile)
-        return self.cloud
-        
-    def previewCloud(self):   
-        logging.info("Preview Cloud Selected")
+        logging.info("Cloud Generation checking the Text File Selected")
         if self.textFile is None:
             logging.warn('No .txt file selected')
             messagebox.showerror("Text File Error", "No Text File Selected")
         else:
-            wordCloud.generateCloud(self)
-            fig, axes = plt.subplots(1,1)
-            axes.imshow(self.cloud, interpolation="bilinear")
-            axes.set_axis_off()
-            #for ax in axes:
-                #ax.set_axis_off()
-            plt.show()
+            logging.info("Text file found")
+            self.cloud = WordCloud(
+                mode = "RGBA",
+                background_color=None,
+                stopwords=self.stopwords,
+                height = 1280,
+                width = 1920,
+                mask = self.image_mask,
+                min_word_length= 3,
+                max_words= 200
+            )
+            self.cloud.generate(self.textFile)
+            return self.cloud
+        
+    def previewCloud(self):   
+        logging.info("Preview Cloud Selected")
+        wordCloud.generateCloud(self)
+        #checkboxValue = self.recolour + self.shapeCloud
+        fig, axes = plt.subplots(1,1)
+        axes.imshow(self.cloud, interpolation="bilinear")
+        axes.set_axis_off()
+        #for ax in axes:
+            #ax.set_axis_off()
+        plt.show()
         
     def saveWordcloud(self):
         self.outputImage = self.saveName.get()
-        if self.outputImage == "":
-            self.outputImage = "WordClouds\Clear Skies.png"
-        else:
-            self.outputImage = "WordClouds\\{}.png".format(self.outputImage)
+        self.outputImage = "WordClouds\\{}.png".format(self.outputImage)
         #Checks to make sure cloud has been generated
         if self.cloud is None:
             #if cloud has been created without using preview it will generate a word cloud

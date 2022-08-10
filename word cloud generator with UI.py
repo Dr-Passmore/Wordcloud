@@ -72,11 +72,16 @@ class wordCloud:
         name = tk.Label(text="Save Image As ")
         self.saveName = tk.Entry(self.root)
         self.saveName.insert(0, "Clear Skies")
+        maxWords = tk.Label(text="Maxium Number of Words")
+        self.numberOfWords = tk.Entry(self.root)
+        self.numberOfWords.insert(0, 200)
         title.pack()
         #selectFile.pack() 
         button_preview.pack()
         checkRecolour.pack()
         checkShape.pack()
+        maxWords.pack()
+        self.numberOfWords.pack()
         name.pack()
         self.saveName.pack()
         button_save.pack()
@@ -146,10 +151,22 @@ class wordCloud:
             self.image_colours = ImageColorGenerator(self.processedImage)
             self.cloud.recolor(color_func=self.image_colours)
             return self.cloud
-        
+    
+    def maxWords(self):
+        self.maxWords = self.numberOfWords.get()
+        if self.maxWords.isdigit():
+            self.maxWords = int(self.maxWords)
+            return self.maxWords
+        else:
+            print (self.maxWords)
+            messagebox.showerror("Max Word error", "Please input a number. The word cloud has been set to 200 as default")
+            self.maxWords = 200
+            return self.maxWords
+    
     def generateCloud(self):
         logging.info("Cloud Generation checking the Text File Selected")
         wordCloud.checkboxStatus(self)
+        wordCloud.maxWords(self)
         if self.textFile is None:
             logging.warn('No .txt file selected')
             messagebox.showerror("Text File Error", "No Text File Selected")
@@ -163,7 +180,7 @@ class wordCloud:
                 width = 1920,
                 mask = self.image_mask,
                 min_word_length= 3,
-                max_words= 200
+                max_words= self.maxWords
             )
             self.cloud.generate(self.textFile)
             return self.cloud

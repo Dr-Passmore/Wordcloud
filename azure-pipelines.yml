@@ -5,13 +5,14 @@
 
 trigger:
 - master
+- releases/*
 
 #pool:
 #  vmImage: ubuntu-latest
 
 steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+- script: git clone RepoURL
+  displayName: 'Clone Github Repo'
 
 - script: |
     echo Add other tasks to build, test, and deploy your project.

@@ -1,4 +1,3 @@
-from configparser import Interpolation
 from matplotlib import image
 from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator
 import matplotlib.pyplot as plt

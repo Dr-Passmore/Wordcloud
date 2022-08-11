@@ -75,12 +75,15 @@ class wordCloud:
         maxWords = tk.Label(text="Maxium Number of Words")
         self.numberOfWords = tk.Entry(self.root)
         self.numberOfWords.insert(0, 200)
+        self.minWordLength = tk.Scale(from_=0, to=15, orient='horizontal')
+        self.minWordLength.set(3)
         title.pack()
         #selectFile.pack() 
         button_preview.pack()
         checkRecolour.pack()
         checkShape.pack()
         maxWords.pack()
+        self.minWordLength.pack()
         self.numberOfWords.pack()
         name.pack()
         self.saveName.pack()
@@ -163,10 +166,19 @@ class wordCloud:
             self.maxWords = 200
             return self.maxWords
     
+    #def numberOfWords(self):
+    #    print(self.textFile)
+    #    text = open(self.textFile)
+    #    data = text.read()
+    #    words = data.split()
+        #print(len(words))
+        #! Only printing full text. Seems to be an issue with the textfile selection. 
+        
     def generateCloud(self):
         logging.info("Cloud Generation checking the Text File Selected")
         wordCloud.checkboxStatus(self)
         wordCloud.maxWords(self)
+        word_length = self.minWordLength.get()
         if self.textFile is None:
             logging.warn('No .txt file selected')
             messagebox.showerror("Text File Error", "No Text File Selected")
@@ -179,7 +191,7 @@ class wordCloud:
                 height = 1280,
                 width = 1920,
                 mask = self.image_mask,
-                min_word_length= 3,
+                min_word_length= word_length,
                 max_words= self.maxWords
             )
             self.cloud.generate(self.textFile)

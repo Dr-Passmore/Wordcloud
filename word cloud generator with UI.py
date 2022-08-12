@@ -9,6 +9,8 @@ import tkinter as tk
 from tkinter import messagebox, filedialog, IntVar, Checkbutton
 import logging
 
+import wordcloud
+
 class wordCloud:
     def __init__(self):
         self.directory = os.path.dirname(__file__) if "__file__" in locals() else os.getcwd()
@@ -77,6 +79,12 @@ class wordCloud:
         self.numberOfWords.insert(0, 200)
         self.minWordLength = tk.Scale(from_=0, to=15, orient='horizontal')
         self.minWordLength.set(3)
+        imageHeight = tk.Label(text="Select image Height")
+        self.heightInput = tk.Entry(self.root)
+        self.heightInput.insert(0, 1280)
+        imageWidth = tk.Label(text="Select image width")
+        self.widthInput = tk.Entry(self.root)
+        self.widthInput.insert(0, 1920)
         title.pack()
         #selectFile.pack() 
         button_preview.pack()
@@ -85,6 +93,10 @@ class wordCloud:
         maxWords.pack()
         self.minWordLength.pack()
         self.numberOfWords.pack()
+        imageHeight.pack()
+        self.heightInput.pack()
+        imageWidth.pack()
+        self.widthInput.pack()
         name.pack()
         self.saveName.pack()
         button_save.pack()
@@ -165,6 +177,27 @@ class wordCloud:
             messagebox.showerror("Max Word error", "Please input a number. The word cloud has been set to 200 as default")
             self.maxWords = 200
             return self.maxWords
+        
+    def heightCheck(self):
+        self.heightNumber = self.heightInput.get()        
+        if self.heightNumber.isdigit():
+            self.heightNumber = int(self.heightNumber)
+            return self.heightNumber
+        else:
+            messagebox.showerror("Height setting", "Please input a number. The word cloud has been set to 1280 as default")
+            self.heightNumber = 1280
+            return self.heightNumber
+    
+    def widthCheck(self):
+        self.widthNumber = self.widthInput.get()
+        if self.widthNumber.isdigit():
+            self.widthNumber = int(self.widthNumber)
+            return self.widthNumber
+        else:
+            messagebox.showerror("Width setting", "Please input a number. The word cloud has been set to 1920 as default")
+            self.widthNumber = 1920
+            return self.widthNumber
+            
     
     #def numberOfWords(self):
     #    print(self.textFile)
@@ -178,6 +211,8 @@ class wordCloud:
         logging.info("Cloud Generation checking the Text File Selected")
         wordCloud.checkboxStatus(self)
         wordCloud.maxWords(self)
+        wordCloud.heightCheck(self)
+        wordCloud.widthCheck(self)
         word_length = self.minWordLength.get()
         if self.textFile is None:
             logging.warn('No .txt file selected')
@@ -188,13 +223,15 @@ class wordCloud:
                 mode = "RGBA",
                 background_color=None,
                 stopwords=self.stopwords,
-                height = 1280,
-                width = 1920,
+                height = self.heightNumber,
+                width = self.widthNumber,
                 mask = self.image_mask,
                 min_word_length= word_length,
                 max_words= self.maxWords
             )
             self.cloud.generate(self.textFile)
+            self.height = "1280"
+            self.width = "1920"
             return self.cloud
         
     def previewCloud(self):   

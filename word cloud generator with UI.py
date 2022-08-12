@@ -6,7 +6,7 @@ import numpy as np
 from scipy.ndimage import gaussian_gradient_magnitude
 import os
 import tkinter as tk
-from tkinter import messagebox, filedialog, IntVar, Checkbutton
+from tkinter import Button, messagebox, filedialog, IntVar, Checkbutton
 import logging
 
 import wordcloud
@@ -51,6 +51,12 @@ class wordCloud:
             command = lambda : wordCloud.exit(self)
         )
         
+        button_addStopWord = tk.Button(
+            self.root,
+            text = 'Add STOPWORD',
+            command= lambda : wordCloud.addingSTOPWORDS(self)
+        )
+        
         self.recolour = IntVar()
         checkRecolour = Checkbutton(
             self.root,
@@ -85,6 +91,9 @@ class wordCloud:
         imageWidth = tk.Label(text="Select image width")
         self.widthInput = tk.Entry(self.root)
         self.widthInput.insert(0, 1920)
+        stopWords = tk.Label(text="Add words to ignore")
+        self.addStopWords = tk.Entry(self.root)
+        
         title.pack()
         #selectFile.pack() 
         button_preview.pack()
@@ -97,6 +106,9 @@ class wordCloud:
         self.heightInput.pack()
         imageWidth.pack()
         self.widthInput.pack()
+        stopWords.pack()
+        self.addStopWords.pack()
+        button_addStopWord.pack()
         name.pack()
         self.saveName.pack()
         button_save.pack()
@@ -198,7 +210,8 @@ class wordCloud:
             self.widthNumber = 1920
             return self.widthNumber
             
-    
+    def addingSTOPWORDS(self):
+        print("test")
     #def numberOfWords(self):
     #    print(self.textFile)
     #    text = open(self.textFile)

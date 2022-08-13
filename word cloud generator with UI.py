@@ -6,7 +6,7 @@ import numpy as np
 from scipy.ndimage import gaussian_gradient_magnitude
 import os
 import tkinter as tk
-from tkinter import Button, messagebox, filedialog, IntVar, Checkbutton
+from tkinter import Button, Label, messagebox, filedialog, IntVar, Checkbutton
 import logging
 
 
@@ -27,6 +27,8 @@ class wordCloud:
         self.stopwords = set(STOPWORDS)
         self.image_mask = None
         self.cloud = None
+        self.selectFile = r'Text\Corbyn Conference Speeches 2015-2019.txt'
+        wordCloud.numberOfWords(self)
         wordCloud.userInterface(self)  
         
     def userInterface(self):
@@ -40,6 +42,7 @@ class wordCloud:
             text = "Select Text",
             command = lambda : wordCloud.selectText(self)
         )
+        self.wordCount = tk.Label(text = "Selected text file {} contains {} words".format(self.selectFile,  self.totalWordCount))
         button_preview = tk.Button(
             self.root, 
             text = "Preview", 
@@ -98,6 +101,7 @@ class wordCloud:
         title.pack()
         #selectFile.pack() 
         button_selectText.pack()
+        self.wordCount.pack()
         button_preview.pack()
         checkRecolour.pack()
         checkShape.pack()
@@ -127,13 +131,15 @@ class wordCloud:
         return self.ImageName
     
     def selectText(self):
-        selectFile = filedialog.askopenfilename(
+        self.selectFile = filedialog.askopenfilename(
             initialdir = r"/Text/",
             title = "Select Text File",
             filetypes = (("text files", "txt"),)
             )
-        logging.info("The text file {} has been selected".format(selectFile))
-        self.textFile = open(os.path.join(self.directory, selectFile), encoding="utf-8").read()
+        logging.info("The text file {} has been selected".format(self.selectFile))
+        self.textFile = open(os.path.join(self.directory, self.selectFile), encoding="utf-8").read()
+        wordCloud.numberOfWords(self)
+        self.wordCount.config(text="Selected text file {} contains {} words".format(self.selectFile,  self.totalWordCount))
         return self.textFile
     
     def checkboxStatus(self):
@@ -223,13 +229,12 @@ class wordCloud:
             self.stopwords = updatedStopWords
             self.addStopWords.delete(0,'end')
             
-    #def numberOfWords(self):
-    #    print(self.textFile)
-    #    text = open(self.textFile)
-    #    data = text.read()
-    #    words = data.split()
-        #print(len(words))
-        #! Only printing full text. Seems to be an issue with the textfile selection. 
+    def numberOfWords(self):
+        text = open(self.selectFile, encoding="utf-8")
+        data = text.read()
+        words = data.split()
+        logging.info("Text file selected contains {} words".format(len(words)))
+        self.totalWordCount = len(words)
         
     def generateCloud(self):
         logging.info("Cloud Generation checking the Text File Selected")

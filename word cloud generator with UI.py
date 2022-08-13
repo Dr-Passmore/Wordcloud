@@ -9,7 +9,7 @@ import tkinter as tk
 from tkinter import Button, messagebox, filedialog, IntVar, Checkbutton
 import logging
 
-import wordcloud
+
 
 class wordCloud:
     def __init__(self):
@@ -35,6 +35,11 @@ class wordCloud:
         #root.configure(background="light green")
         self.root.geometry("1000x800")
         title = tk.Label(text="Word Cloud Generator")
+        button_selectText = tk.Button(
+            self.root,
+            text = "Select Text",
+            command = lambda : wordCloud.selectText(self)
+        )
         button_preview = tk.Button(
             self.root, 
             text = "Preview", 
@@ -50,13 +55,11 @@ class wordCloud:
             text = "Exit",
             command = lambda : wordCloud.exit(self)
         )
-        
         button_addStopWord = tk.Button(
             self.root,
             text = 'Add STOPWORD',
             command= lambda : wordCloud.addingSTOPWORDS(self)
         )
-        
         self.recolour = IntVar()
         checkRecolour = Checkbutton(
             self.root,
@@ -66,7 +69,6 @@ class wordCloud:
             offvalue = 0, 
             height=2, 
             width = 20)
-        
         self.shapeCloud = IntVar()
         checkShape = Checkbutton(
             self.root,
@@ -76,7 +78,6 @@ class wordCloud:
             offvalue = 0,
             height = 2,
             width = 20)
-        
         name = tk.Label(text="Save Image As ")
         self.saveName = tk.Entry(self.root)
         self.saveName.insert(0, "Clear Skies")
@@ -96,6 +97,7 @@ class wordCloud:
         
         title.pack()
         #selectFile.pack() 
+        button_selectText.pack()
         button_preview.pack()
         checkRecolour.pack()
         checkShape.pack()
@@ -130,7 +132,8 @@ class wordCloud:
             title = "Select Text File",
             filetypes = (("text files", "txt"),)
             )
-        self.textFile = selectFile
+        logging.info("The text file {} has been selected".format(selectFile))
+        self.textFile = open(os.path.join(self.directory, selectFile), encoding="utf-8").read()
         return self.textFile
     
     def checkboxStatus(self):

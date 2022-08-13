@@ -24,7 +24,7 @@ class wordCloud:
         self.textFile = open(os.path.join(self.directory, r'Text\Corbyn Conference Speeches 2015-2019.txt'), encoding="utf-8").read()
         self.outputImage = None
         self.Image = 'Pictures\\Cat_Silhouette_PNG_Transparent_Clip_Art_Image.png'
-        self.stopwords = STOPWORDS
+        self.stopwords = set(STOPWORDS)
         self.image_mask = None
         self.cloud = None
         wordCloud.userInterface(self)  
@@ -211,7 +211,15 @@ class wordCloud:
             return self.widthNumber
             
     def addingSTOPWORDS(self):
-        print("test")
+        addword = self.addStopWords.get()
+        updatedStopWords = self.stopwords
+        if addword is None:
+            logging.info("No word provided")
+        else:
+            updatedStopWords.add(addword)
+            self.stopwords = updatedStopWords
+            self.addStopWords.delete(0,'end')
+            
     #def numberOfWords(self):
     #    print(self.textFile)
     #    text = open(self.textFile)

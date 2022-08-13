@@ -43,6 +43,12 @@ class wordCloud:
             command = lambda : wordCloud.selectText(self)
         )
         self.wordCount = tk.Label(text = "Selected text file {} contains {} words".format(self.selectFile,  self.totalWordCount))
+        button_selectImage = tk.Button(
+            self.root,
+            text = "Select Image",
+            command = lambda : wordCloud.selectImage(self)
+        )
+        self.selectedImage = tk.Label(text = "Image selection is {}".format(self.Image))
         button_preview = tk.Button(
             self.root, 
             text = "Preview", 
@@ -102,6 +108,8 @@ class wordCloud:
         #selectFile.pack() 
         button_selectText.pack()
         self.wordCount.pack()
+        button_selectImage.pack()
+        self.selectedImage.pack()
         button_preview.pack()
         checkRecolour.pack()
         checkShape.pack()
@@ -127,8 +135,9 @@ class wordCloud:
             title = "Select Image File",
             filetypes = (("Image files", "png"),)
         )
-        self.ImageName =selectImage
-        return self.ImageName
+        self.Image =selectImage
+        self.selectedImage.config(text = "Image selection is {}".format(self.Image))
+        return self.Image
     
     def selectText(self):
         self.selectFile = filedialog.askopenfilename(

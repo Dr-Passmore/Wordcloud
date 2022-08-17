@@ -109,6 +109,7 @@ class wordCloud:
         self.widthInput.insert(0, 1920)
         stopWords = tk.Label(text="Add words to ignore")
         self.addStopWords = tk.Entry(self.root)
+        self.addedStopWords = tk.Label(text = "No words added")
         self.backgroundColourLabel = tk.Label(text="Background Colour Selection")
         
         title.pack()
@@ -130,6 +131,7 @@ class wordCloud:
         stopWords.pack()
         self.addStopWords.pack()
         button_addStopWord.pack()
+        self.addedStopWords.pack()
         self.backgroundColourLabel.pack()
         button_selectBackgroundColour.pack()
         name.pack()
@@ -246,6 +248,7 @@ class wordCloud:
             updatedStopWords.add(addword)
             self.stopwords = updatedStopWords
             self.addStopWords.delete(0,'end')
+            wordCloud.addedStopWordsDisplay(self)
             
     def numberOfWords(self):
         text = open(self.selectFile, encoding="utf-8")
@@ -258,6 +261,12 @@ class wordCloud:
         myColourSelector = colorchooser.askcolor()
         self.backgroundColour = myColourSelector[1]
         self.backgroundColourLabel.config(background=self.backgroundColour, text="Current Background Colour")
+        
+    def addedStopWordsDisplay(self):
+        list = set(self.stopwords)
+        addedWords = [word for word in list if word not in STOPWORDS]
+        addedWords = ", ".join([str(x) for x in addedWords])
+        self.addedStopWords.config(text = "Words added: {}".format(addedWords))
         
     def generateCloud(self):
         logging.info("Cloud Generation checking the Text File Selected")

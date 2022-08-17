@@ -6,7 +6,7 @@ import numpy as np
 from scipy.ndimage import gaussian_gradient_magnitude
 import os
 import tkinter as tk
-from tkinter import Button, Label, messagebox, filedialog, IntVar, Checkbutton
+from tkinter import Button, Label, messagebox, filedialog, IntVar, Checkbutton, colorchooser
 import logging
 
 
@@ -27,6 +27,7 @@ class wordCloud:
         self.stopwords = set(STOPWORDS)
         self.image_mask = None
         self.cloud = None
+        self.backgroundColour = None
         self.selectFile = r'Text\Corbyn Conference Speeches 2015-2019.txt'
         wordCloud.numberOfWords(self)
         wordCloud.userInterface(self)  
@@ -69,6 +70,11 @@ class wordCloud:
             text = 'Add STOPWORD',
             command= lambda : wordCloud.addingSTOPWORDS(self)
         )
+        button_selectBackgroundColour = tk.Button(
+            self.root,
+            text = "Select Colour",
+            command = lambda: wordCloud.colourSelection(self)
+        )
         self.recolour = IntVar()
         checkRecolour = Checkbutton(
             self.root,
@@ -103,6 +109,7 @@ class wordCloud:
         self.widthInput.insert(0, 1920)
         stopWords = tk.Label(text="Add words to ignore")
         self.addStopWords = tk.Entry(self.root)
+        self.backgroundColourLabel = tk.Label(text="Background Colour Selection")
         
         title.pack()
         #selectFile.pack() 
@@ -123,6 +130,8 @@ class wordCloud:
         stopWords.pack()
         self.addStopWords.pack()
         button_addStopWord.pack()
+        self.backgroundColourLabel.pack()
+        button_selectBackgroundColour.pack()
         name.pack()
         self.saveName.pack()
         button_save.pack()
@@ -245,6 +254,11 @@ class wordCloud:
         logging.info("Text file selected contains {} words".format(len(words)))
         self.totalWordCount = len(words)
         
+    def colourSelection(self):
+        myColourSelector = colorchooser.askcolor()
+        self.backgroundColour = myColourSelector[1]
+        self.backgroundColourLabel.config(background=self.backgroundColour, text="Current Background Colour")
+        
     def generateCloud(self):
         logging.info("Cloud Generation checking the Text File Selected")
         wordCloud.checkboxStatus(self)
@@ -259,7 +273,7 @@ class wordCloud:
             logging.info("Text file found")
             self.cloud = WordCloud(
                 mode = "RGBA",
-                background_color=None,
+                background_color=self.backgroundColour,
                 stopwords=self.stopwords,
                 height = self.heightNumber,
                 width = self.widthNumber,

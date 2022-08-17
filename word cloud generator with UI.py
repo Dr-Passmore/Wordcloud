@@ -75,6 +75,11 @@ class wordCloud:
             text = "Select Colour",
             command = lambda: wordCloud.colourSelection(self)
         )
+        button_switchHeightWidth = tk.Button(
+            self.root,
+            text = "Switch Height and Width",
+            command = lambda: wordCloud.switchHieghtWidth(self)
+        )
         self.recolour = IntVar()
         checkRecolour = Checkbutton(
             self.root,
@@ -128,6 +133,7 @@ class wordCloud:
         self.heightInput.pack()
         imageWidth.pack()
         self.widthInput.pack()
+        button_switchHeightWidth.pack()
         stopWords.pack()
         self.addStopWords.pack()
         button_addStopWord.pack()
@@ -238,6 +244,14 @@ class wordCloud:
             messagebox.showerror("Width setting", "Please input a number. The word cloud has been set to 1920 as default")
             self.widthNumber = 1920
             return self.widthNumber
+        
+    def switchHieghtWidth(self):
+        wordCloud.heightCheck(self)
+        wordCloud.widthCheck(self)
+        self.widthInput.delete(0, 'end')
+        self.heightInput.delete(0, 'end')
+        self.widthInput.insert(0, self.heightNumber)
+        self.heightInput.insert(0, self.widthNumber)
             
     def addingSTOPWORDS(self):
         addword = self.addStopWords.get()

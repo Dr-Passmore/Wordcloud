@@ -8,7 +8,7 @@ import os
 import tkinter as tk
 from tkinter import Button, Label, messagebox, filedialog, IntVar, Checkbutton, colorchooser
 import logging
-
+import PyPDF2
 
 
 class wordCloud:
@@ -169,6 +169,18 @@ class wordCloud:
         wordCloud.numberOfWords(self)
         self.wordCount.config(text="Selected text file {} contains {} words".format(self.selectFile,  self.totalWordCount))
         return self.textFile
+    
+    def pdfCoverter(self):
+        logging.info('pdfConverter activated')
+        pdfFile = open(self.textFile, 'rb')
+        pdfRead = PyPDF2.PdfFileReader(pdfFile)
+        pdfPageNum = pdfRead.numPages
+        self.textFile = ""
+        for page in range(pdfPageNum):
+            pg = pdfRead.getPage(page)
+            text += pg.extract_text()
+        return self.textFile
+        
     
     def checkboxStatus(self):
         logging.info('Checking whether tick boxes are selected')

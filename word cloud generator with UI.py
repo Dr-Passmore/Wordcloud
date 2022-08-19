@@ -35,7 +35,7 @@ class wordCloud:
     def userInterface(self):
         self.root = tk.Tk()
         self.root.title("Word Cloud Generator")
-        #root.configure(background="light green")
+        #self.root.configure(background="light green")
         self.root.geometry("1000x800")
         title = tk.Label(text="Word Cloud Generator")
         button_selectText = tk.Button(
@@ -59,6 +59,11 @@ class wordCloud:
             self.root,
             text = "Save",
             command = lambda : wordCloud.saveWordcloud(self)
+        )
+        button_reset = tk.Button(
+            self.root,
+            text = "Reset Settings",
+            command = lambda : wordCloud.reset(self)
         )
         button_exit = tk.Button(
             self.root,
@@ -145,6 +150,7 @@ class wordCloud:
         name.pack()
         self.saveName.pack()
         button_save.pack()
+        button_reset.pack()
         button_exit.pack()
         self.root.mainloop()
     
@@ -380,6 +386,21 @@ class wordCloud:
         self.cloud.to_file(self.outputImage)
         #Resets the Cloud once saved
         self.cloud = None
+    
+    def reset(self):
+        self.minWordLength.set(3)
+        self.widthInput.delete(0, 'end')
+        self.heightInput.delete(0, 'end')
+        self.heightInput.insert(0, 1280)
+        self.widthInput.insert(0, 1920)
+        self.stopwords = set(STOPWORDS)
+        self.image_mask = None
+        self.cloud = None
+        self.backgroundColour = None
+        self.backgroundColourLabel.config(background="SystemButtonFace", text="Background Colour Selection")
+        self.addedStopWords.config(text = "No words added")
+        self.numberOfWords.delete(0, 'end')
+        self.numberOfWords.insert(0, 200)
     
     def exit(self):
         self.root.destroy()

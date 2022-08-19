@@ -80,6 +80,11 @@ class wordCloud:
             text = "Select Colour",
             command = lambda: wordCloud.colourSelection(self)
         )
+        button_resetBackgroundColour = tk.Button(
+            self.root,
+            text = "Remove Background Colour",
+            command = lambda: wordCloud.resetColourSelection(self)
+        )
         button_switchHeightWidth = tk.Button(
             self.root,
             text = "Switch Height and Width",
@@ -147,6 +152,7 @@ class wordCloud:
         self.addedStopWords.pack()
         self.backgroundColourLabel.pack()
         button_selectBackgroundColour.pack()
+        button_resetBackgroundColour.pack()
         name.pack()
         self.saveName.pack()
         button_save.pack()
@@ -303,6 +309,10 @@ class wordCloud:
         myColourSelector = colorchooser.askcolor()
         self.backgroundColour = myColourSelector[1]
         self.backgroundColourLabel.config(background=self.backgroundColour, text="Current Background Colour")
+    
+    def resetColourSelection(self):
+        self.backgroundColour = None
+        self.backgroundColourLabel.config(background="SystemButtonFace", text="Background Colour Selection")
         
     def addedStopWordsDisplay(self):
         list = set(self.stopwords)

@@ -155,7 +155,8 @@ class wordCloud:
             filetypes = (("Image files", "png"),)
         )
         self.Image =selectImage
-        self.selectedImage.config(text = "Image selection is {}".format(self.Image))
+        head, tail = os.path.split(self.Image)
+        self.selectedImage.config(text = "Image selection is {}".format(tail))
         return self.Image
     
     def selectText(self):
@@ -170,12 +171,13 @@ class wordCloud:
         else:
             wordCloud.pdfCoverter(self)
         wordCloud.numberOfWords(self)
-        self.wordCount.config(text="Selected text file {} contains {} words".format(self.selectFile,  self.totalWordCount))
+        head, tail = os.path.split(self.selectFile)
+        self.wordCount.config(text="Selected text file {} contains {} words".format(tail,  self.totalWordCount))
         return self.textFile
     
     def pdfCoverter(self):
         logging.info('pdfConverter activated')
-        pdfFile = open(self.selectFile, 'rb') #encoding='latin1')
+        pdfFile = open(self.selectFile,  'rb')
         pdfRead = PyPDF2.PdfFileReader(pdfFile)
         pdfPageNum = pdfRead.numPages
         self.textFile = ""
@@ -285,7 +287,7 @@ class wordCloud:
         if self.selectFile.endswith('.txt'):
             text = open(self.selectFile, encoding="utf-8")
         else:
-            text = open(self.selectFile, encoding="Latin1")
+            text = open(self.selectFile, encoding="ISO8859-1")
         data = text.read() 
         words = data.split()
         logging.info("Text file selected contains {} words".format(len(words)))

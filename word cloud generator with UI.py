@@ -162,25 +162,28 @@ class wordCloud:
         self.selectFile = filedialog.askopenfilename(
             initialdir = r"/Text/",
             title = "Select Text File",
-            filetypes = (("text files", "txt"),)
+            filetypes = [("text files", "*.txt"), ("PDF files", '*.pdf')]
             )
         logging.info("The text file {} has been selected".format(self.selectFile))
-        self.textFile = open(os.path.join(self.directory, self.selectFile), encoding="utf-8").read()
+        if self.selectFile.endswith('.txt'):
+            self.textFile = open(os.path.join(self.directory, self.selectFile), encoding="utf-8").read()
+        else:
+            wordCloud.pdfCoverter(self)
         wordCloud.numberOfWords(self)
         self.wordCount.config(text="Selected text file {} contains {} words".format(self.selectFile,  self.totalWordCount))
         return self.textFile
     
     def pdfCoverter(self):
         logging.info('pdfConverter activated')
-        pdfFile = open(self.textFile, 'rb')
+        pdfFile = open(self.selectFile, 'rb') #encoding='latin1')
         pdfRead = PyPDF2.PdfFileReader(pdfFile)
         pdfPageNum = pdfRead.numPages
         self.textFile = ""
         for page in range(pdfPageNum):
             pg = pdfRead.getPage(page)
-            text += pg.extract_text()
+            self.textFile += pg.extract_text()
+        logging.info('PDF text extracted')
         return self.textFile
-        
     
     def checkboxStatus(self):
         logging.info('Checking whether tick boxes are selected')
@@ -280,7 +283,7 @@ class wordCloud:
             
     def numberOfWords(self):
         text = open(self.selectFile, encoding="utf-8")
-        data = text.read()
+        data = text.read() 
         words = data.split()
         logging.info("Text file selected contains {} words".format(len(words)))
         self.totalWordCount = len(words)

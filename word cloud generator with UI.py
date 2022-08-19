@@ -282,7 +282,10 @@ class wordCloud:
             wordCloud.addedStopWordsDisplay(self)
             
     def numberOfWords(self):
-        text = open(self.selectFile, encoding="utf-8")
+        if self.selectFile.endswith('.txt'):
+            text = open(self.selectFile, encoding="utf-8")
+        else:
+            text = open(self.selectFile, encoding="Latin1")
         data = text.read() 
         words = data.split()
         logging.info("Text file selected contains {} words".format(len(words)))

@@ -43,13 +43,15 @@ class wordCloud:
             text = "Select Text",
             command = lambda : wordCloud.selectText(self)
         )
-        self.wordCount = tk.Label(text = "Selected text file {} contains {} words".format(self.selectFile,  self.totalWordCount))
+        head, tailText = os.path.split(self.selectFile)
+        self.wordCount = tk.Label(text = "Selected text file is {} and contains {} words".format(tailText,  self.totalWordCount))
         button_selectImage = tk.Button(
             self.root,
             text = "Select Image",
             command = lambda : wordCloud.selectImage(self)
         )
-        self.selectedImage = tk.Label(text = "Image selection is {}".format(self.Image))
+        head, tailImage = os.path.split(self.Image)
+        self.selectedImage = tk.Label(text = "Image selection is {}".format(tailImage))
         button_preview = tk.Button(
             self.root, 
             text = "Preview", 
@@ -184,7 +186,7 @@ class wordCloud:
             wordCloud.pdfCoverter(self)
         wordCloud.numberOfWords(self)
         head, tail = os.path.split(self.selectFile)
-        self.wordCount.config(text="Selected text file {} contains {} words".format(tail,  self.totalWordCount))
+        self.wordCount.config(text="Selected text file is {} and contains {} words".format(tail,  self.totalWordCount))
         return self.textFile
     
     def pdfCoverter(self):
@@ -411,6 +413,14 @@ class wordCloud:
         self.addedStopWords.config(text = "No words added")
         self.numberOfWords.delete(0, 'end')
         self.numberOfWords.insert(0, 200)
+        self.textFile = open(os.path.join(self.directory, r'Text\Corbyn Conference Speeches 2015-2019.txt'), encoding="utf-8").read()
+        self.Image = 'Pictures\\Cat_Silhouette_PNG_Transparent_Clip_Art_Image.png'
+        self.selectFile = r'Text\Corbyn Conference Speeches 2015-2019.txt'
+        wordCloud.numberOfWords(self)
+        head, tail = os.path.split(self.Image)
+        self.selectedImage.config(text = "Image selection is {}".format(tail))
+        head, tail = os.path.split(self.selectFile)
+        self.wordCount.config(text="Selected text file is {} and contains {} words".format(tail,  self.totalWordCount))
     
     def exit(self):
         self.root.destroy()

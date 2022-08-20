@@ -93,7 +93,7 @@ class wordCloud:
             command = lambda: wordCloud.switchHieghtWidth(self)
         )
         self.recolour = IntVar()
-        checkRecolour = Checkbutton(
+        self.checkRecolour = Checkbutton(
             self.root,
             text = "Recolour Text", 
             variable = self.recolour, 
@@ -102,7 +102,7 @@ class wordCloud:
             height=2, 
             width = 20)
         self.shapeCloud = IntVar()
-        checkShape = Checkbutton(
+        self.checkShape = Checkbutton(
             self.root,
             text = "Use Image Boundary Map",
             variable= self.shapeCloud,
@@ -137,8 +137,8 @@ class wordCloud:
         button_selectImage.pack()
         self.selectedImage.pack()
         button_preview.pack()
-        checkRecolour.pack()
-        checkShape.pack()
+        self.checkRecolour.pack()
+        self.checkShape.pack()
         characterLength.pack()
         self.minWordLength.pack()
         maxWords.pack()
@@ -421,6 +421,8 @@ class wordCloud:
         self.selectedImage.config(text = "Image selection is {}".format(tail))
         head, tail = os.path.split(self.selectFile)
         self.wordCount.config(text="Selected text file is {} and contains {} words".format(tail,  self.totalWordCount))
+        self.checkRecolour.deselect()
+        self.checkShape.deselect()
     
     def exit(self):
         self.root.destroy()

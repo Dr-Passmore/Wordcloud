@@ -75,7 +75,12 @@ class wordCloud:
         button_addStopWord = tk.Button(
             self.root,
             text = 'Add STOPWORD',
-            command= lambda : wordCloud.addingSTOPWORDS(self)
+            command = lambda : wordCloud.addingSTOPWORDS(self)
+        )
+        button_resetStopWords = tk.Button(
+            self.root,
+            text = "Reset STOPWORDs",
+            command = lambda : wordCloud.resetStopWords(self) 
         )
         button_selectBackgroundColour = tk.Button(
             self.root,
@@ -152,6 +157,7 @@ class wordCloud:
         self.addStopWords.pack()
         button_addStopWord.pack()
         self.addedStopWords.pack()
+        button_resetStopWords.pack()
         self.backgroundColourLabel.pack()
         button_selectBackgroundColour.pack()
         button_resetBackgroundColour.pack()
@@ -296,6 +302,10 @@ class wordCloud:
             self.stopwords = updatedStopWords
             self.addStopWords.delete(0,'end')
             wordCloud.addedStopWordsDisplay(self)
+    
+    def resetStopWords(self):
+        self.stopwords = set(STOPWORDS)
+        wordCloud.addedStopWordsDisplay(self)
             
     def numberOfWords(self):
         if self.selectFile.endswith('.txt'):

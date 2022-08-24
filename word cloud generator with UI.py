@@ -358,6 +358,20 @@ class wordCloud:
             self.height = "1280"
             self.width = "1920"
             return self.cloud
+    #! Need to add two defs one for checkbox action and one for preview
+    
+    def checkboxAction(self):
+        wordCloud.checkboxStatus(self)
+        if self.numberTicked == 0:
+            self.image_mask = None
+        elif self.numberTicked == 1:
+            if self.recolouredCheck == 1:
+                self.image_mask = None
+                wordCloud.cloudRecolour(self)
+            else:
+                wordCloud.cloudShape(self)
+        elif self.numberTicked == 2:
+            wordCloud.recolourShape(self)
         
     def previewCloud(self):   
         logging.info("Preview Cloud Selected")
@@ -402,6 +416,7 @@ class wordCloud:
         #Checks to make sure cloud has been generated
         if self.cloud is None:
             #if cloud has been created without using preview it will generate a word cloud
+            wordCloud.checkboxAction(self)
             wordCloud.generateCloud(self)
         else:
             logging.info("Cloud already generated")

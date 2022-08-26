@@ -335,7 +335,7 @@ class wordCloud:
         
     def generateCloud(self):
         logging.info("Cloud Generation checking the Text File Selected")
-        wordCloud.checkboxStatus(self)
+        wordCloud.checkboxAction(self)
         wordCloud.maxWords(self)
         wordCloud.heightCheck(self)
         wordCloud.widthCheck(self)
@@ -380,39 +380,12 @@ class wordCloud:
         
     def previewCloud(self):   
         logging.info("Preview Cloud Selected")
-        wordCloud.checkboxStatus(self)
-        
-        if self.numberTicked == 0:
-            self.image_mask = None
-            wordCloud.generateCloud(self)
-            fig, axes = plt.subplots(1,1)
-            axes.imshow(self.cloud, interpolation="bilinear")
-            axes.set_axis_off()
-        elif self.numberTicked == 1:
-            
-            if self.recolouredCheck == 1:
-                self.image_mask = None
-                wordCloud.generateCloud(self)
-                fig, axes = plt.subplots(1, 2)
-                axes[0].imshow(self.cloud, interpolation="bilinear")
-                axes[0].set_title('Default Colours')
-                wordCloud.cloudRecolour(self)
-                axes[1].imshow(self.cloud, interpolation="bilinear")
-                axes[1].set_title('Recoloured Using Image')
-                for ax in axes:
-                    ax.set_axis_off()
-            else:
-                fig, axes = plt.subplots(1, 1)
-                wordCloud.cloudShape(self)
-                wordCloud.generateCloud(self)
-                axes.imshow(self.cloud, interpolation="bilinear")
-                axes.set_axis_off()
-        elif self.numberTicked == 2:
-            
-            wordCloud.recolourShape(self)
-            fig, axes = plt.subplots(1, 1)
-            axes.imshow(self.cloud, interpolation="bilinear")
-            axes.set_axis_off()
+        self.textColourChange = False
+        wordCloud.checkboxAction(self)
+        wordCloud.generateCloud(self)
+        fig, axes = plt.subplots(1,1)
+        axes.imshow(self.cloud, interpolation="bilinear")
+        axes.set_axis_off()
         plt.show()
         
     def saveWordcloud(self):

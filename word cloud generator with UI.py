@@ -28,6 +28,7 @@ class wordCloud:
         self.image_mask = None
         self.cloud = None
         self.backgroundColour = None
+        self.textColourChange = False
         self.selectFile = r'Text\Corbyn Conference Speeches 2015-2019.txt'
         wordCloud.numberOfWords(self)
         wordCloud.userInterface(self)  
@@ -234,8 +235,8 @@ class wordCloud:
         else:
             self.newImage = np.array(Image.open(os.path.join(self.Image)))
             self.image_colours = ImageColorGenerator(self.newImage)
-            self.cloud.recolor(color_func=self.image_colours)
-            return self.cloud
+            self.textColourChange = True
+            #self.cloud.recolor(color_func=self.image_colours)
     
     def recolourShape(self):
         if self.Image is None:
@@ -248,10 +249,10 @@ class wordCloud:
             self.image_mask[self.image_mask.sum(axis=2)==0] = 255
             edges = np.mean([gaussian_gradient_magnitude(self.processedImage[:, :, i]/255., 2) for i in range(3)], axis = 0)
             self.image_mask[edges > 0.8] = 255
-            wordCloud.generateCloud(self)
+            #wordCloud.generateCloud(self)
             self.image_colours = ImageColorGenerator(self.processedImage)
-            self.cloud.recolor(color_func=self.image_colours)
-            return self.cloud
+            #self.cloud.recolor(color_func=self.image_colours)
+            self.textColourChange = True
     
     def maxWords(self):
         self.maxWords = self.numberOfWords.get()
@@ -357,7 +358,11 @@ class wordCloud:
             self.cloud.generate(self.textFile)
             self.height = "1280"
             self.width = "1920"
-            return self.cloud
+            if self.textColourChange == True:
+                self.cloud.recolor(color_func=self.image_colours)
+                return self.cloud
+            else:
+                return self.cloud
     #! Need to add two defs one for checkbox action and one for preview
     
     def checkboxAction(self):
@@ -423,6 +428,7 @@ class wordCloud:
         self.cloud.to_file(self.outputImage)
         #Resets the Cloud once saved
         self.cloud = None
+        self.textColourChange = False
     
     def reset(self):
         self.minWordLength.set(3)
@@ -448,6 +454,7 @@ class wordCloud:
         self.wordCount.config(text="Selected text file is {} and contains {} words".format(tail,  self.totalWordCount))
         self.checkRecolour.deselect()
         self.checkShape.deselect()
+        self.textColourChange = False
     
     def exit(self):
         self.root.destroy()

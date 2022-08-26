@@ -125,6 +125,15 @@ class wordCloud:
             offvalue = 0,
             height = 2,
             width = 30)
+        self.repeatWords = IntVar()
+        self.checkRepeatWords = Checkbutton(
+            self.root,
+            text = "Allow repeating of Words",
+            variable= self.repeatWords,
+            onvalue= 1,
+            offvalue= 0,
+            height = 2,
+            width= 30)
         name = tk.Label(text="Save Image As ")
         self.saveName = tk.Entry(self.root)
         self.saveName.insert(0, "Clear Skies")
@@ -155,6 +164,7 @@ class wordCloud:
         self.checkRecolour.pack()
         self.checkShape.pack()
         self.includeNumbers.pack()
+        self.checkRepeatWords.pack()
         characterLength.pack()
         self.minWordLength.pack()
         maxWords.pack()
@@ -222,12 +232,17 @@ class wordCloud:
         logging.info('Checking whether tick boxes are selected')
         self.shapecloudCheck = self.shapeCloud.get()
         self.recolouredCheck = self.recolour.get()
-        self.numbersCheck = self.numbersIncluded.get()
+        numbersCheck = self.numbersIncluded.get()
+        repeatWordsCheck = self.repeatWords.get()
         self.numberTicked = self.shapecloudCheck + self.recolouredCheck
-        if self.numbersCheck == 1:
+        if numbersCheck == 1:
             self.number = True
         else:
             self.number = False
+        if repeatWordsCheck == 1:
+            self.repeat = True
+        else: 
+            self.repeat = False
         return self.numberTicked
     
     def cloudShape(self):
@@ -369,7 +384,8 @@ class wordCloud:
                 mask = self.image_mask,
                 min_word_length= word_length,
                 max_words= self.maxWords,
-                include_numbers=self.number
+                include_numbers=self.number,
+                repeat=self.repeat
             )
             self.cloud.generate(self.textFile)
             self.height = "1280"
@@ -443,6 +459,7 @@ class wordCloud:
         self.checkRecolour.deselect()
         self.checkShape.deselect()
         self.includeNumbers.deselect()
+        self.checkRepeatWords.deselect()
         self.textColourChange = False
     
     def exit(self):

@@ -105,7 +105,7 @@ class wordCloud:
             variable = self.recolour, 
             onvalue = 1, 
             offvalue = 0, 
-            height=2, 
+            height=1, 
             width = 30)
         self.shapeCloud = IntVar()
         self.checkShape = Checkbutton(
@@ -114,7 +114,7 @@ class wordCloud:
             variable= self.shapeCloud,
             onvalue = 1, 
             offvalue = 0,
-            height = 2,
+            height = 1,
             width = 30)
         self.numbersIncluded = IntVar()
         self.includeNumbers = Checkbutton(
@@ -123,7 +123,7 @@ class wordCloud:
             variable = self.numbersIncluded,
             onvalue = 1,
             offvalue = 0,
-            height = 2,
+            height = 1,
             width = 30)
         self.repeatWords = IntVar()
         self.checkRepeatWords = Checkbutton(
@@ -132,7 +132,7 @@ class wordCloud:
             variable= self.repeatWords,
             onvalue= 1,
             offvalue= 0,
-            height = 2,
+            height = 1,
             width= 30)
         name = tk.Label(text="Save Image As ")
         self.saveName = tk.Entry(self.root)
@@ -464,13 +464,7 @@ class wordCloud:
     
     def exit(self):
         self.root.destroy()
-        
-    def testRun(self):
-        self.textFile = open(os.path.join(self.directory, r'Text\Corbyn Conference Speeches 2015-2019.txt'), encoding="utf-8").read()
-        wordCloud.generateCloud(self)
-        self.cloud.generate(self.textFile)
-        output = r'WordClouds\test2.png' 
-        self.cloud.to_file(output)
+
 #logging.basicConfig(filename='Word Cloud.log', filemode='w', level=logging.DEBUG)
 
 wordCloud()

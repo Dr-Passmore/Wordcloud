@@ -101,12 +101,12 @@ class wordCloud:
         self.recolour = IntVar()
         self.checkRecolour = Checkbutton(
             self.root,
-            text = "Recolour Text", 
+            text = "Recolour Text Using Image", 
             variable = self.recolour, 
             onvalue = 1, 
             offvalue = 0, 
             height=2, 
-            width = 20)
+            width = 30)
         self.shapeCloud = IntVar()
         self.checkShape = Checkbutton(
             self.root,
@@ -115,7 +115,16 @@ class wordCloud:
             onvalue = 1, 
             offvalue = 0,
             height = 2,
-            width = 20)
+            width = 30)
+        self.numbersIncluded = IntVar()
+        self.includeNumbers = Checkbutton(
+            self.root,
+            text = "Include Numbers From Text File",
+            variable = self.numbersIncluded,
+            onvalue = 1,
+            offvalue = 0,
+            height = 2,
+            width = 30)
         name = tk.Label(text="Save Image As ")
         self.saveName = tk.Entry(self.root)
         self.saveName.insert(0, "Clear Skies")
@@ -145,6 +154,7 @@ class wordCloud:
         button_preview.pack()
         self.checkRecolour.pack()
         self.checkShape.pack()
+        self.includeNumbers.pack()
         characterLength.pack()
         self.minWordLength.pack()
         maxWords.pack()
@@ -212,7 +222,12 @@ class wordCloud:
         logging.info('Checking whether tick boxes are selected')
         self.shapecloudCheck = self.shapeCloud.get()
         self.recolouredCheck = self.recolour.get()
+        self.numbersCheck = self.numbersIncluded.get()
         self.numberTicked = self.shapecloudCheck + self.recolouredCheck
+        if self.numbersCheck == 1:
+            self.number = True
+        else:
+            self.number = False
         return self.numberTicked
     
     def cloudShape(self):
@@ -353,7 +368,8 @@ class wordCloud:
                 width = self.widthNumber,
                 mask = self.image_mask,
                 min_word_length= word_length,
-                max_words= self.maxWords
+                max_words= self.maxWords,
+                include_numbers=self.number
             )
             self.cloud.generate(self.textFile)
             self.height = "1280"
@@ -363,7 +379,6 @@ class wordCloud:
                 return self.cloud
             else:
                 return self.cloud
-    #! Need to add two defs one for checkbox action and one for preview
     
     def checkboxAction(self):
         wordCloud.checkboxStatus(self)
@@ -427,6 +442,7 @@ class wordCloud:
         self.wordCount.config(text="Selected text file is {} and contains {} words".format(tail,  self.totalWordCount))
         self.checkRecolour.deselect()
         self.checkShape.deselect()
+        self.includeNumbers.deselect()
         self.textColourChange = False
     
     def exit(self):

@@ -511,6 +511,10 @@ class wordCloud:
         self.checkRepeatWords.deselect()
         self.textColourChange = False
         self.colourSelected = "viridis"
+        self.colourType.current(0)
+        self.colourRange.config(value = self.colourSet1)
+        self.colourRange.current(0)
+        
     
     def exit(self):
         self.root.destroy()

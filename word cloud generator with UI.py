@@ -116,15 +116,16 @@ class wordCloud:
         self.colourSet5 = ['twilight', 'twilight_shifted', 'hsv']
         self.colourSet6 = ['Pastel1', 'Pastel2', 'Paired', 'Accent', 'Dark2', 'Set1', 'Set2', 'Set3', 'tab10', 'tab20', 'tab20b', 'tab20c']
         self.colourSet7 = ['flag', 'prism', 'ocean', 'gist_earth', 'terrain', 'gist_stern', 'gnuplot', 'gnuplot2', 'CMRmap', 'cubehelix', 'brg', 'gist_rainbow', 'rainbow', 'jet', 'turbo', 'nipy_spectral', 'gist_ncar']
-        self.colourRange = ttk.Combobox(self.root,
-            value = self.colourSet1, 
-            width=30)
-        self.colourRange.current(0)
+        
         self.colourType = ttk.Combobox(self.root, 
             value = Types, 
             width=30)
         self.colourType.current(0)
-        self.colourType.bind("<<ComboboxSelected>>", wordCloud.pickColour(self))
+        self.colourRange = ttk.Combobox(self.root,
+            value = self.colourSet1, 
+            width=30)
+        self.colourRange.current(0)
+        self.colourType.bind('<<ComboboxSelected>>', lambda event: self.pickColour(self))
         self.shapeCloud = IntVar()
         self.checkShape = Checkbutton(
             self.root,
@@ -208,29 +209,31 @@ class wordCloud:
         button_reset.pack()
         button_exit.pack()
         self.root.mainloop()
-    
-    def pickColour(self):
-        colour = self.colourType.get()
+        
+        
+    def pickColour(event, self):
+        colour = event.colourType.get()
+        print(colour)
         if colour == 'Perceptually Uniform Sequential':
-            self.colourRange.config(value=self.colourSet1)
+            self.colourRange.config(values=self.colourSet1)
             self.colourRange.current(0)
-        if colour == 'Sequential':
-            self.colourRange.config(value=self.colourSet2)
+        elif colour == 'Sequential':
+            self.colourRange.config(values=self.colourSet2)
             self.colourRange.current(0)
-        if colour == 'Sequential (2)':
-            self.colourRange.config(value=self.colourSet3)
+        elif colour == 'Sequential (2)':
+            self.colourRange.config(values=self.colourSet3)
             self.colourRange.current(0)
-        if colour == 'Diverging':
-            self.colourRange.config(value=self.colourSet4)
+        elif colour == 'Diverging':
+            self.colourRange.config(values=self.colourSet4)
             self.colourRange.current(0)
-        if colour == 'Cyclic':
-            self.colourRange.config(value=self.colourSet5)
+        elif colour == 'Cyclic':
+            self.colourRange.config(values=self.colourSet5)
             self.colourRange.current(0)
-        if colour == 'Qualitative':
-            self.colourRange.config(value=self.colourSet6)
+        elif colour == 'Qualitative':
+            self.colourRange.config(values=self.colourSet6)
             self.colourRange.current(0)
-        if colour == 'Miscellaneous':
-            self.colourRange.config(value=self.colourSet7)
+        elif colour == 'Miscellaneous':
+            self.colourRange.config(values=self.colourSet7)
             self.colourRange.current(0)
     
     def selectImage(self):

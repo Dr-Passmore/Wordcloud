@@ -6,7 +6,7 @@ import numpy as np
 from scipy.ndimage import gaussian_gradient_magnitude
 import os
 import tkinter as tk
-from tkinter import Button, Label, messagebox, filedialog, IntVar, Checkbutton, colorchooser
+from tkinter import Button, Label, messagebox, filedialog, IntVar, Checkbutton, colorchooser, ttk
 import logging
 import PyPDF2
 
@@ -29,6 +29,7 @@ class wordCloud:
         self.cloud = None
         self.backgroundColour = None
         self.textColourChange = False
+        self.colourSelected = "viridis"
         self.selectFile = r'Text\Corbyn Conference Speeches 2015-2019.txt'
         wordCloud.numberOfWords(self)
         wordCloud.userInterface(self)  
@@ -107,6 +108,23 @@ class wordCloud:
             offvalue = 0, 
             height=1, 
             width = 30)
+        Types = ['Perceptually Uniform Sequential', 'Sequential', 'Sequential (2)', 'Diverging', 'Cyclic', 'Qualitative', 'Miscellaneous']
+        self.colourSet1 = ['viridis', 'plasma', 'inferno', 'magma', 'cividis']
+        self.colourSet2 = ['Greys', 'Purples', 'Blues', 'Greens', 'Oranges', 'Reds', 'YlOrBr', 'YlOrRd', 'OrRd', 'PuRd', 'RdPu', 'BuPu', 'GnBu', 'PuBu', 'YlGnBu', 'PuBuGn', 'BuGn', 'YlGn']
+        self.colourSet3 = ['binary', 'gist_yarg', 'gist_gray', 'gray', 'bone', 'pink', 'spring', 'summer', 'autumn', 'winter', 'cool', 'Wistia', 'hot', 'afmhot', 'gist_heat', 'copper']
+        self.colourSet4 = ['PiYG', 'PRGn', 'BrBG', 'PuOr', 'RdGy', 'RdBu', 'RdYlBu', 'RdYlGn', 'Spectral', 'coolwarm', 'bwr', 'seismic']
+        self.colourSet5 = ['twilight', 'twilight_shifted', 'hsv']
+        self.colourSet6 = ['Pastel1', 'Pastel2', 'Paired', 'Accent', 'Dark2', 'Set1', 'Set2', 'Set3', 'tab10', 'tab20', 'tab20b', 'tab20c']
+        self.colourSet7 = ['flag', 'prism', 'ocean', 'gist_earth', 'terrain', 'gist_stern', 'gnuplot', 'gnuplot2', 'CMRmap', 'cubehelix', 'brg', 'gist_rainbow', 'rainbow', 'jet', 'turbo', 'nipy_spectral', 'gist_ncar']
+        self.colourRange = ttk.Combobox(self.root,
+            value = self.colourSet1, 
+            width=30)
+        self.colourRange.current(0)
+        self.colourType = ttk.Combobox(self.root, 
+            value = Types, 
+            width=30)
+        self.colourType.current(0)
+        self.colourType.bind("<<ComboboxSelected>>", wordCloud.pickColour(self))
         self.shapeCloud = IntVar()
         self.checkShape = Checkbutton(
             self.root,
@@ -165,6 +183,8 @@ class wordCloud:
         self.checkShape.pack()
         self.includeNumbers.pack()
         self.checkRepeatWords.pack()
+        self.colourType.pack()
+        self.colourRange.pack()
         characterLength.pack()
         self.minWordLength.pack()
         maxWords.pack()
@@ -188,6 +208,30 @@ class wordCloud:
         button_reset.pack()
         button_exit.pack()
         self.root.mainloop()
+    
+    def pickColour(self):
+        colour = self.colourType.get()
+        if colour == 'Perceptually Uniform Sequential':
+            self.colourRange.config(value=self.colourSet1)
+            self.colourRange.current(0)
+        if colour == 'Sequential':
+            self.colourRange.config(value=self.colourSet2)
+            self.colourRange.current(0)
+        if colour == 'Sequential (2)':
+            self.colourRange.config(value=self.colourSet3)
+            self.colourRange.current(0)
+        if colour == 'Diverging':
+            self.colourRange.config(value=self.colourSet4)
+            self.colourRange.current(0)
+        if colour == 'Cyclic':
+            self.colourRange.config(value=self.colourSet5)
+            self.colourRange.current(0)
+        if colour == 'Qualitative':
+            self.colourRange.config(value=self.colourSet6)
+            self.colourRange.current(0)
+        if colour == 'Miscellaneous':
+            self.colourRange.config(value=self.colourSet7)
+            self.colourRange.current(0)
     
     def selectImage(self):
         selectImage = filedialog.askopenfilename(
@@ -369,6 +413,7 @@ class wordCloud:
         wordCloud.maxWords(self)
         wordCloud.heightCheck(self)
         wordCloud.widthCheck(self)
+        self.colourSelected = self.colourRange.get()
         word_length = self.minWordLength.get()
         if self.textFile is None:
             logging.warn('No .txt file selected')
@@ -385,7 +430,8 @@ class wordCloud:
                 min_word_length= word_length,
                 max_words= self.maxWords,
                 include_numbers=self.number,
-                repeat=self.repeat
+                repeat=self.repeat,
+                colormap=self.colourSelected
             )
             self.cloud.generate(self.textFile)
             self.height = "1280"
@@ -461,6 +507,7 @@ class wordCloud:
         self.includeNumbers.deselect()
         self.checkRepeatWords.deselect()
         self.textColourChange = False
+        self.colourSelected = "viridis"
     
     def exit(self):
         self.root.destroy()

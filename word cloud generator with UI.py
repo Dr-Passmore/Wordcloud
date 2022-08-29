@@ -119,10 +119,12 @@ class wordCloud:
         
         self.colourType = ttk.Combobox(self.root, 
             value = Types, 
+            state="readonly",
             width=30)
         self.colourType.current(0)
         self.colourRange = ttk.Combobox(self.root,
             value = self.colourSet1, 
+            state="readonly",
             width=30)
         self.colourRange.current(0)
         self.colourType.bind('<<ComboboxSelected>>', lambda event: self.pickColour(self))
@@ -510,7 +512,6 @@ class wordCloud:
         self.includeNumbers.deselect()
         self.checkRepeatWords.deselect()
         self.textColourChange = False
-        self.colourSelected = "viridis"
         self.colourType.current(0)
         self.colourRange.config(value = self.colourSet1)
         self.colourRange.current(0)

@@ -178,6 +178,7 @@ class wordCloud:
         self.addStopWords = tk.Entry(self.root)
         self.addedStopWords = tk.Label(text = "No words added")
         self.backgroundColourLabel = tk.Label(text="Background Colour Selection")
+        self.backgroundColourexample = Label(text = "          ", width=20)
         
         title.pack()
         #selectFile.pack() 
@@ -207,6 +208,7 @@ class wordCloud:
         self.addedStopWords.pack()
         button_resetStopWords.pack()
         self.backgroundColourLabel.pack()
+        self.backgroundColourexample.pack()
         button_selectBackgroundColour.pack()
         button_resetBackgroundColour.pack()
         name.pack()
@@ -426,12 +428,14 @@ class wordCloud:
         myColourSelector = colorchooser.askcolor()
         self.backgroundColour = myColourSelector[1]
         logging.info("{} has been selected as the WordCloud background colour".format(self.backgroundColour))
-        self.backgroundColourLabel.config(background=self.backgroundColour, text="Current Background Colour")
+        self.backgroundColourLabel.config(text="Current Background Colour: ")
+        self.backgroundColourexample.config(background=self.backgroundColour)
     
     def resetColourSelection(self):
         self.backgroundColour = None
-        logging.info("Background colour has been reset to None")
-        self.backgroundColourLabel.config(background="SystemButtonFace", text="Background Colour Selection")
+        logging.info("Background colour has been reset to SystemButtonFace")
+        self.backgroundColourLabel.config(text="Background Colour Selection")
+        self.backgroundColourexample.config(background="SystemButtonFace")
         
     def addedStopWordsDisplay(self):
         list = set(self.stopwords)
@@ -529,7 +533,8 @@ class wordCloud:
         self.image_mask = None
         self.cloud = None
         self.backgroundColour = None
-        self.backgroundColourLabel.config(background="SystemButtonFace", text="Background Colour Selection")
+        self.backgroundColourLabel.config(text="Background Colour Selection")
+        self.backgroundColourexample.config(background="SystemButtonFace")
         self.addedStopWords.config(text = "No words added")
         self.numberOfWords.delete(0, 'end')
         self.numberOfWords.insert(0, 200)

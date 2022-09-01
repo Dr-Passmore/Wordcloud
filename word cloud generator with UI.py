@@ -249,13 +249,12 @@ class wordCloud:
         )
         self.Image =selectImage
         head, tail = os.path.split(self.Image)
-        print (self.Image)
         if self.Image == "":
             self.selectedImage.config(text = "No image selected")
             logging.info("No image Selected")
         else:
             self.selectedImage.config(text = "Image selection is {}".format(tail))
-            logging.warning("The selected image is {}".format(tail))
+            logging.info("The selected image is {}".format(tail))
             return self.Image
         
     def selectText(self):
@@ -264,7 +263,6 @@ class wordCloud:
             title = "Select Text File",
             filetypes = [("text files", "*.txt"), ("PDF files", '*.pdf')]
             )
-        logging.info("The text file {} has been selected".format(self.selectFile))
         if self.selectFile.endswith('.txt'):
             self.textFile = open(os.path.join(self.directory, self.selectFile), encoding="utf-8").read()
         elif self.selectFile == "":
@@ -273,7 +271,7 @@ class wordCloud:
             wordCloud.pdfCoverter(self)
         head, tail = os.path.split(self.selectFile)
         if self.selectFile == "":
-            logging.warning("No text file selected")
+            logging.error("No text file selected")
         else:
             wordCloud.numberOfWords(self)
             self.wordCount.config(text="Selected text file is {} and contains {} words".format(tail,  self.totalWordCount))
@@ -363,6 +361,7 @@ class wordCloud:
             print (self.maxWords)
             messagebox.showerror("Max Word error", "Please input a number. The word cloud has been set to 200 as default")
             self.maxWords = 200
+            logging.error("Max words needs to be a number. Using {} words as a default".format(self.maxWords))
             return self.maxWords
         
     def heightCheck(self):
@@ -373,6 +372,7 @@ class wordCloud:
         else:
             messagebox.showerror("Height setting", "Please input a number. The word cloud has been set to 1280 as default")
             self.heightNumber = 1280
+            logging.error("Height setting needs to be a number. Using {} words as a default".format(self.heightNumber))
             return self.heightNumber
     
     def widthCheck(self):
@@ -383,6 +383,7 @@ class wordCloud:
         else:
             messagebox.showerror("Width setting", "Please input a number. The word cloud has been set to 1920 as default")
             self.widthNumber = 1920
+            logging.error("Width settings needs to be a number. Using {} words as a default".format(self.widthNumber))
             return self.widthNumber
         
     def switchHieghtWidth(self):
@@ -392,6 +393,7 @@ class wordCloud:
         self.heightInput.delete(0, 'end')
         self.widthInput.insert(0, self.heightNumber)
         self.heightInput.insert(0, self.widthNumber)
+        logging.info("Switch Height and Width button pressed")
             
     def addingSTOPWORDS(self):
         addword = self.addStopWords.get()
@@ -400,12 +402,14 @@ class wordCloud:
             logging.info("No word provided")
         else:
             updatedStopWords.add(addword)
+            logging.info("{} has been added to the list of stopwords".format(addword))
             self.stopwords = updatedStopWords
             self.addStopWords.delete(0,'end')
             wordCloud.addedStopWordsDisplay(self)
     
     def resetStopWords(self):
         self.stopwords = set(STOPWORDS)
+        logging.info("Stopwords have been reset by the user")
         wordCloud.addedStopWordsDisplay(self)
             
     def numberOfWords(self):
@@ -421,10 +425,12 @@ class wordCloud:
     def colourSelection(self):
         myColourSelector = colorchooser.askcolor()
         self.backgroundColour = myColourSelector[1]
+        logging.info("{} has been selected as the WordCloud background colour".format(self.backgroundColour))
         self.backgroundColourLabel.config(background=self.backgroundColour, text="Current Background Colour")
     
     def resetColourSelection(self):
         self.backgroundColour = None
+        logging.info("Background colour has been reset to None")
         self.backgroundColourLabel.config(background="SystemButtonFace", text="Background Colour Selection")
         
     def addedStopWordsDisplay(self):
@@ -432,6 +438,7 @@ class wordCloud:
         addedWords = [word for word in list if word not in STOPWORDS]
         addedWords = ", ".join([str(x) for x in addedWords])
         self.addedStopWords.config(text = "Words added: {}".format(addedWords))
+        logging.info("Added stopwords displayed updated")
         
     def generateCloud(self):
         logging.info("Cloud Generation checking the Text File Selected")
@@ -440,9 +447,10 @@ class wordCloud:
         wordCloud.heightCheck(self)
         wordCloud.widthCheck(self)
         self.colourSelected = self.colourRange.get()
+        logging.info("Word Cloud colour selected - {}".format(self.colourSelected))
         word_length = self.minWordLength.get()
         if self.textFile == "":
-            logging.warn('No .txt file selected')
+            logging.error('No text file selected')
             messagebox.showerror("Text File Error", "No Text File Selected")
         else:
             logging.info("Text file found")
@@ -460,9 +468,11 @@ class wordCloud:
                 colormap=self.colourSelected,
             )
             self.cloud.generate(self.textFile)
-            self.height = "1280"
-            self.width = "1920"
+            #self.height = "1280"
+            #self.width = "1920"
+            logging.info("Generated Word Cloud")
             if self.textColourChange == True:
+                logging.info("recolouring wordcloud based on image")
                 self.cloud.recolor(color_func=self.image_colours)
                 return self.cloud
             else:
@@ -470,14 +480,18 @@ class wordCloud:
     
     def checkboxAction(self):
         if self.numberTicked == 0:
+            logging.info("Image settings are not ticked")
             self.image_mask = None
         elif self.numberTicked == 1:
             if self.recolouredCheck == 1:
+                logging.info("Recolour Word Cloud using Image is ticked")
                 self.image_mask = None
                 wordCloud.cloudRecolour(self)
             else:
+                logging.info("Reshape Word Cloud using Image is ticked")
                 wordCloud.cloudShape(self)
         elif self.numberTicked == 2:
+            logging.info("Both recolour and reshape word cloud are ticked")
             wordCloud.recolourShape(self)
         
     def previewCloud(self):   
@@ -491,6 +505,7 @@ class wordCloud:
         
     def saveWordcloud(self):
         self.outputImage = self.saveName.get()
+        logging.info("Saving Word Cloud as {}".format(self.outputImage))
         self.outputImage = "WordClouds\\{}.png".format(self.outputImage)
         #Checks to make sure cloud has been generated
         if self.cloud is None:
@@ -504,6 +519,7 @@ class wordCloud:
         self.textColourChange = False
     
     def reset(self):
+        logging.info("Reset all settings has been pressed")
         self.minWordLength.set(3)
         self.widthInput.delete(0, 'end')
         self.heightInput.delete(0, 'end')
@@ -533,9 +549,11 @@ class wordCloud:
         self.colourType.current(0)
         self.colourRange.config(value = self.colourSet1)
         self.colourRange.current(0)
+        logging.info("All settings reset back to default values")
         
     
     def exit(self):
+        logging.info("Exiting program")
         self.root.destroy()
 
 logging.basicConfig(filename='Word Cloud.log', 

@@ -268,7 +268,6 @@ class wordCloud:
         if self.selectFile.endswith('.txt'):
             self.textFile = open(os.path.join(self.directory, self.selectFile), encoding="utf-8").read()
         elif self.selectFile == "":
-            
             self.wordCount.config(text="No text file selected")    
         else:
             wordCloud.pdfCoverter(self)
@@ -300,20 +299,24 @@ class wordCloud:
         numbersCheck = self.numbersIncluded.get()
         repeatWordsCheck = self.repeatWords.get()
         self.numberTicked = self.shapecloudCheck + self.recolouredCheck
+        wordCloud.checkboxAction(self)
         if numbersCheck == 1:
             self.number = True
         else:
             self.number = False
+        logging.info("Include Numbers is set to {}".format(self.number))
         if repeatWordsCheck == 1:
             self.repeat = True
         else: 
             self.repeat = False
+        logging.info("Include repeated words is set to {}".format(self.repeat))
         return self.numberTicked
+        
     
     def cloudShape(self):
-        if self.Image is None:
-            logging.warn('No .png file selected')
-            messagebox.showerror("Image File Error", "No Image File Selected")
+        if self.Image == "":
+            logging.error('No .png file selected, Generating WordCloud Without Image Settings')
+            messagebox.showerror("Image File Error", "No Image File Selected, Generating WordCloud Without Image Settings")
         else:
             self.processedImage = np.array(Image.open(os.path.join(self.Image)))
             self.processedImage = self.processedImage[::3, ::3]
@@ -321,22 +324,24 @@ class wordCloud:
             self.image_mask[self.image_mask.sum(axis=2)==0] = 255
             edges = np.mean([gaussian_gradient_magnitude(self.processedImage[:, :, i]/255., 2) for i in range(3)], axis = 0)
             self.image_mask[edges > 0.8] = 255
+            logging.info("Image mask has been generated from Image")
             return self.image_mask
     
     def cloudRecolour(self):
-        if self.Image is None:
-            logging.warn('No .png file selected')
-            messagebox.showerror("Image File Error", "No Image File Selected")
+        if self.Image == "":
+            logging.error('No .png file selected, Generating WordCloud Without Image Settings')
+            messagebox.showerror("Image File Error", "No Image File Selected, Generating WordCloud Without Image Settings")
         else:
             self.newImage = np.array(Image.open(os.path.join(self.Image)))
             self.image_colours = ImageColorGenerator(self.newImage)
             self.textColourChange = True
-            #self.cloud.recolor(color_func=self.image_colours)
+            logging.info("Recolour using image has been selected")
+            
     
     def recolourShape(self):
-        if self.Image is None:
-            logging.warn('No .png file selected')
-            messagebox.showerror("Image File Error", "No Image File Selected")
+        if self.Image == "":
+            logging.error('No .png file selected, Generating WordCloud Without Image Settings')
+            messagebox.showerror("Image File Error", "No Image File Selected, Generating WordCloud Without Image Settings")
         else:
             self.processedImage = np.array(Image.open(os.path.join(self.Image)))
             self.processedImage = self.processedImage[::3, ::3]
@@ -344,10 +349,10 @@ class wordCloud:
             self.image_mask[self.image_mask.sum(axis=2)==0] = 255
             edges = np.mean([gaussian_gradient_magnitude(self.processedImage[:, :, i]/255., 2) for i in range(3)], axis = 0)
             self.image_mask[edges > 0.8] = 255
-            #wordCloud.generateCloud(self)
+            logging.info("Image mask has been generated from Image")
             self.image_colours = ImageColorGenerator(self.processedImage)
-            #self.cloud.recolor(color_func=self.image_colours)
             self.textColourChange = True
+            logging.info("Recolour using image has been selected")
     
     def maxWords(self):
         self.maxWords = self.numberOfWords.get()
@@ -430,13 +435,13 @@ class wordCloud:
         
     def generateCloud(self):
         logging.info("Cloud Generation checking the Text File Selected")
-        wordCloud.checkboxAction(self)
+        wordCloud.checkboxStatus(self)
         wordCloud.maxWords(self)
         wordCloud.heightCheck(self)
         wordCloud.widthCheck(self)
         self.colourSelected = self.colourRange.get()
         word_length = self.minWordLength.get()
-        if self.textFile is None:
+        if self.textFile == "":
             logging.warn('No .txt file selected')
             messagebox.showerror("Text File Error", "No Text File Selected")
         else:
@@ -464,7 +469,6 @@ class wordCloud:
                 return self.cloud
     
     def checkboxAction(self):
-        wordCloud.checkboxStatus(self)
         if self.numberTicked == 0:
             self.image_mask = None
         elif self.numberTicked == 1:
@@ -479,7 +483,6 @@ class wordCloud:
     def previewCloud(self):   
         logging.info("Preview Cloud Selected")
         self.textColourChange = False
-        wordCloud.checkboxAction(self)
         wordCloud.generateCloud(self)
         fig, axes = plt.subplots(1,1)
         axes.imshow(self.cloud, interpolation="bilinear")
@@ -492,7 +495,6 @@ class wordCloud:
         #Checks to make sure cloud has been generated
         if self.cloud is None:
             #if cloud has been created without using preview it will generate a word cloud
-            wordCloud.checkboxAction(self)
             wordCloud.generateCloud(self)
         else:
             logging.info("Cloud already generated")
@@ -538,7 +540,7 @@ class wordCloud:
 
 logging.basicConfig(filename='Word Cloud.log', 
                     filemode='a', 
-                    level=logging.DEBUG,
+                    level=logging.INFO,
                     format='%(asctime)s %(levelname)s %(message)s',
                     datefmt='%Y-%m-%d %H:%M:%S')
 

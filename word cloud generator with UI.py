@@ -1,3 +1,4 @@
+from time import asctime
 from matplotlib import image
 from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator
 import matplotlib.pyplot as plt
@@ -13,6 +14,7 @@ import PyPDF2
 
 class wordCloud:
     def __init__(self):
+        logging.info("Initialising WordCloud")
         self.directory = os.path.dirname(__file__) if "__file__" in locals() else os.getcwd()
         #Checks to make sure Folders exist and if not creates them
         if not os.path.exists(r'Pictures'):
@@ -52,6 +54,7 @@ class wordCloud:
             text = "Select Image",
             command = lambda : wordCloud.selectImage(self)
         )
+        logging.info("Default text file selected: {}".format(tailText))
         head, tailImage = os.path.split(self.Image)
         self.selectedImage = tk.Label(text = "Image selection is {}".format(tailImage))
         button_preview = tk.Button(
@@ -59,6 +62,7 @@ class wordCloud:
             text = "Preview", 
             command = lambda : wordCloud.previewCloud(self)
             )
+        logging.info("Default image file selected: {}".format(tailImage))
         button_save = tk.Button(
             self.root,
             text = "Save",
@@ -212,10 +216,9 @@ class wordCloud:
         button_exit.pack()
         self.root.mainloop()
         
-        
     def pickColour(event, self):
         colour = event.colourType.get()
-        print(colour)
+        logging.info("Colour Type {} selected".format(colour))
         if colour == 'Perceptually Uniform Sequential':
             self.colourRange.config(values=self.colourSet1)
             self.colourRange.current(0)
@@ -246,9 +249,15 @@ class wordCloud:
         )
         self.Image =selectImage
         head, tail = os.path.split(self.Image)
-        self.selectedImage.config(text = "Image selection is {}".format(tail))
-        return self.Image
-    
+        print (self.Image)
+        if self.Image == "":
+            self.selectedImage.config(text = "No image selected")
+            logging.info("No image Selected")
+        else:
+            self.selectedImage.config(text = "Image selection is {}".format(tail))
+            logging.warning("The selected image is {}".format(tail))
+            return self.Image
+        
     def selectText(self):
         self.selectFile = filedialog.askopenfilename(
             initialdir = r"/Text/",
@@ -258,12 +267,19 @@ class wordCloud:
         logging.info("The text file {} has been selected".format(self.selectFile))
         if self.selectFile.endswith('.txt'):
             self.textFile = open(os.path.join(self.directory, self.selectFile), encoding="utf-8").read()
+        elif self.selectFile == "":
+            
+            self.wordCount.config(text="No text file selected")    
         else:
             wordCloud.pdfCoverter(self)
-        wordCloud.numberOfWords(self)
         head, tail = os.path.split(self.selectFile)
-        self.wordCount.config(text="Selected text file is {} and contains {} words".format(tail,  self.totalWordCount))
-        return self.textFile
+        if self.selectFile == "":
+            logging.warning("No text file selected")
+        else:
+            wordCloud.numberOfWords(self)
+            self.wordCount.config(text="Selected text file is {} and contains {} words".format(tail,  self.totalWordCount))
+            logging.info("Selected text file is {} and contains {} words".format(tail,  self.totalWordCount))
+            return self.textFile
     
     def pdfCoverter(self):
         logging.info('pdfConverter activated')
@@ -436,7 +452,7 @@ class wordCloud:
                 max_words= self.maxWords,
                 include_numbers=self.number,
                 repeat=self.repeat,
-                colormap=self.colourSelected
+                colormap=self.colourSelected,
             )
             self.cloud.generate(self.textFile)
             self.height = "1280"
@@ -520,7 +536,11 @@ class wordCloud:
     def exit(self):
         self.root.destroy()
 
-#logging.basicConfig(filename='Word Cloud.log', filemode='w', level=logging.DEBUG)
+logging.basicConfig(filename='Word Cloud.log', 
+                    filemode='a', 
+                    level=logging.DEBUG,
+                    format='%(asctime)s %(levelname)s %(message)s',
+                    datefmt='%Y-%m-%d %H:%M:%S')
 
 wordCloud()
 

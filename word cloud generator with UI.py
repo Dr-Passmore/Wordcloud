@@ -40,11 +40,15 @@ class wordCloud:
         self.root = tk.Tk()
         self.root.title("Word Cloud Generator")
         #self.root.configure(background="light green")
-        self.root.geometry("800x500")
-        title = tk.Label(text="Word Cloud Generator")
+        self.root.geometry("800x600")
+        title = tk.Label(text="Word Cloud Generator", font='sans 18 bold')
         button_selectText = tk.Button(
             self.root,
             text = "Select Text",
+            width=11,
+            height=2,
+            background='light yellow',
+            font='sans 12 bold',
             command = lambda : wordCloud.selectText(self)
         )
         head, tailText = os.path.split(self.selectFile)
@@ -52,6 +56,10 @@ class wordCloud:
         button_selectImage = tk.Button(
             self.root,
             text = "Select Image",
+            width=11,
+            height=2,
+            background='light yellow',
+            font='sans 12 bold',
             command = lambda : wordCloud.selectImage(self)
         )
         logging.info("Default text file selected: {}".format(tailText))
@@ -60,22 +68,38 @@ class wordCloud:
         button_preview = tk.Button(
             self.root, 
             text = "Preview", 
+            width=11,
+            height=2,
+            background='light green',
+            font='sans 12 bold',
             command = lambda : wordCloud.previewCloud(self)
             )
         logging.info("Default image file selected: {}".format(tailImage))
         button_save = tk.Button(
             self.root,
             text = "Save",
+            width=11,
+            height=2,
+            background='light green',
+            font='sans 12 bold',
             command = lambda : wordCloud.saveWordcloud(self)
         )
         button_reset = tk.Button(
             self.root,
             text = "Reset Settings",
+            width=11,
+            height=2,
+            background='orange',
+            font='sans 12 bold',
             command = lambda : wordCloud.reset(self)
         )
         button_exit = tk.Button(
             self.root,
             text = "Exit",
+            width=11,
+            height=2,
+            background='red',
+            font='sans 12 bold',
             command = lambda : wordCloud.exit(self)
         )
         button_addStopWord = tk.Button(
@@ -158,8 +182,8 @@ class wordCloud:
             offvalue= 0,
             height = 1,
             width= 30)
-        name = tk.Label(text="Save Image As ")
-        self.saveName = tk.Entry(self.root)
+        name = tk.Label(text="Save as:", font='sans 10')
+        self.saveName = tk.Entry(self.root, width=20, font='sans 10')
         self.saveName.insert(0, "Clear Skies")
         maxWords = tk.Label(text="Maxium Number of Words")
         self.numberOfWords = tk.Entry(self.root)
@@ -190,20 +214,20 @@ class wordCloud:
 
         
         
-        button_selectText.grid(column=0, row=2)
-        self.wordCount.grid(column=0, row=4)
-        button_selectImage.grid(column=0, row=6)
-        self.selectedImage.grid(column=0, row=8)
+        button_selectText.grid(column=0, row=1)
+        self.wordCount.grid(column=0, row=2)
+        button_selectImage.grid(column=0, row=3)
+        self.selectedImage.grid(column=0, row=4)
         self.backgroundColourLabel.grid(column=0, row=10)
         self.backgroundColourexample.grid(column=0, row=11)
         button_selectBackgroundColour.grid(column=0, row=12)
         button_resetBackgroundColour.grid(column=0, row=13)
         
-        title.grid(column=1, row=0)
+        title.grid(column=1, row=0, pady=8)
         button_preview.grid(column=1, row=1)
-        name.grid(column=1, row=2)
-        self.saveName.grid(column=1, row=3)
-        button_save.grid(column=1, row=4)
+        name.grid(column=1, row=2, sticky="W", ipadx=20)
+        self.saveName.grid(column=1, row=2, sticky="E", ipadx=15, padx = 15)
+        button_save.grid(column=1, row=3)
         self.checkRecolour.grid(column=1, row= 5)
         self.checkShape.grid(column=1, row=6)
         self.colourType.grid(column=1, row =8)
@@ -214,7 +238,7 @@ class wordCloud:
         imageWidth.grid(column=1,row=12)
         self.widthInput.grid(column=1, row=13)
         button_switchHeightWidth.grid(column=1, row=14)
-        button_reset.grid(column=1, row=15)
+        
         
         characterLength.grid(column=2, row=2)
         self.minWordLength.grid(column=2, row=3)
@@ -227,7 +251,8 @@ class wordCloud:
         button_addStopWord.grid(column=2, row=11)
         self.addedStopWords.grid(column=2, row=12)
         button_resetStopWords.grid(column=2, row=13)
-        button_exit.grid(column=2, row=15)
+        button_exit.grid(column=2, row=14, sticky="SE", pady=8, padx =1)
+        button_reset.grid(column=2, row=14, sticky="SW", pady=8)
         
         self.root.resizable(True, True)
         self.root.mainloop()
@@ -290,7 +315,7 @@ class wordCloud:
             logging.error("No text file selected")
         else:
             wordCloud.numberOfWords(self)
-            self.wordCount.config(text="Selected text file is \n{} and contains \n{} words".format(tail,  self.totalWordCount))
+            self.wordCount.config(text="Selected text file is \n{}\nand contains {} words".format(tail,  self.totalWordCount))
             logging.info("Selected text file is {} and contains {} words".format(tail,  self.totalWordCount))
             return self.textFile
     
@@ -559,7 +584,7 @@ class wordCloud:
         head, tail = os.path.split(self.Image)
         self.selectedImage.config(text = "Image selection is \n{}".format(tail))
         head, tail = os.path.split(self.selectFile)
-        self.wordCount.config(text="Selected text file is \n{} and contains \n{} words".format(tail,  self.totalWordCount))
+        self.wordCount.config(text="Selected text file is \n{} \nand contains {} words".format(tail,  self.totalWordCount))
         self.checkRecolour.deselect()
         self.checkShape.deselect()
         self.includeNumbers.deselect()

@@ -135,7 +135,8 @@ class wordCloud:
             onvalue = 1, 
             offvalue = 0, 
             height=1, 
-            width = 30)
+            width = 30,
+            font='sans 10')
         Types = ['Perceptually Uniform Sequential', 'Sequential', 'Sequential (2)', 'Diverging', 'Cyclic', 'Qualitative', 'Miscellaneous']
         self.colourSet1 = ['viridis', 'plasma', 'inferno', 'magma', 'cividis']
         self.colourSet2 = ['Greys', 'Purples', 'Blues', 'Greens', 'Oranges', 'Reds', 'YlOrBr', 'YlOrRd', 'OrRd', 'PuRd', 'RdPu', 'BuPu', 'GnBu', 'PuBu', 'YlGnBu', 'PuBuGn', 'BuGn', 'YlGn']
@@ -147,12 +148,14 @@ class wordCloud:
         self.colourType = ttk.Combobox(self.root, 
             value = Types, 
             state="readonly",
-            width=30)
+            width=30,
+            font='sans 10')
         self.colourType.current(0)
         self.colourRange = ttk.Combobox(self.root,
             value = self.colourSet1, 
             state="readonly",
-            width=30)
+            width=30,
+            font='sans 10')
         self.colourRange.current(0)
         self.colourType.bind('<<ComboboxSelected>>', lambda event: self.pickColour(self))
         self.shapeCloud = IntVar()
@@ -163,7 +166,8 @@ class wordCloud:
             onvalue = 1, 
             offvalue = 0,
             height = 1,
-            width = 30)
+            width = 30,
+            font='sans 10')
         self.numbersIncluded = IntVar()
         self.includeNumbers = Checkbutton(
             self.root,
@@ -172,7 +176,8 @@ class wordCloud:
             onvalue = 1,
             offvalue = 0,
             height = 1,
-            width = 30)
+            width = 30,
+            font='sans 10')
         self.repeatWords = IntVar()
         self.checkRepeatWords = Checkbutton(
             self.root,
@@ -181,19 +186,21 @@ class wordCloud:
             onvalue= 1,
             offvalue= 0,
             height = 1,
-            width= 30)
+            width= 30,
+            font='sans 10')
         name = tk.Label(text="Save as:", font='sans 10')
-        self.saveName = tk.Entry(self.root, width=20, font='sans 10')
+        self.saveName = tk.Entry(self.root, width=18, font='sans 10')
         self.saveName.insert(0, "Clear Skies")
-        maxWords = tk.Label(text="Maxium Number of Words")
-        self.numberOfWords = tk.Entry(self.root)
+        maxWords = tk.Label(text="Maximum Words:", font='sans 10')
+        self.numberOfWords = tk.Entry(self.root, width=10, font='sans 10')
         self.numberOfWords.insert(0, 200)
-        characterLength = tk.Label(text ="Minimum Word Character Length:")
+        characterLength = tk.Label(text ="Minimum Word Length:", font='sans 10')
         self.minWordLength = tk.Scale(from_=0, 
             to=15, 
             orient='horizontal',
             width=20,
-            length=100)
+            length=80,
+            font='sans 10')
         self.minWordLength.set(3)
         imageHeight = tk.Label(text="Select image Height")
         self.heightInput = tk.Entry(self.root)
@@ -206,7 +213,7 @@ class wordCloud:
         self.addedStopWords = tk.Label(text = "No words added")
         self.backgroundColourLabel = tk.Label(text="Background Colour Selection")
         self.backgroundColourexample = Label(text = "          ", width=20)
-        selectColour = Label(text="Select WordCloud Text Colours")
+        selectColour = Label(text="Select WordCloud Text Colours", font='sans 10')
         
         self.root.columnconfigure(0, weight=1)
         self.root.columnconfigure(1, weight=1)
@@ -218,6 +225,8 @@ class wordCloud:
         self.wordCount.grid(column=0, row=2)
         button_selectImage.grid(column=0, row=3)
         self.selectedImage.grid(column=0, row=4)
+        self.checkRecolour.grid(column=0, row= 5)
+        self.checkShape.grid(column=0, row=6)
         self.backgroundColourLabel.grid(column=0, row=10)
         self.backgroundColourexample.grid(column=0, row=11)
         button_selectBackgroundColour.grid(column=0, row=12)
@@ -228,11 +237,9 @@ class wordCloud:
         name.grid(column=1, row=2, sticky="W", ipadx=20)
         self.saveName.grid(column=1, row=2, sticky="E", ipadx=15, padx = 15)
         button_save.grid(column=1, row=3)
-        self.checkRecolour.grid(column=1, row= 5)
-        self.checkShape.grid(column=1, row=6)
-        self.colourType.grid(column=1, row =8)
-        selectColour.grid(column=1, row=7)
-        self.colourRange.grid(column=1, row=9)
+        self.colourType.grid(column=1, row =5)
+        selectColour.grid(column=1, row=4, sticky="S")
+        self.colourRange.grid(column=1, row=6)
         imageHeight.grid(column=1, row=10)
         self.heightInput.grid(column=1, row=11)
         imageWidth.grid(column=1,row=12)
@@ -240,12 +247,12 @@ class wordCloud:
         button_switchHeightWidth.grid(column=1, row=14)
         
         
-        characterLength.grid(column=2, row=2)
-        self.minWordLength.grid(column=2, row=3)
-        maxWords.grid(column=2, row=4)
-        self.numberOfWords.grid(column=2, row=5)
-        self.includeNumbers.grid(column=2, row=6)
-        self.checkRepeatWords.grid(column=2, row=7)
+        characterLength.grid(column=2, row=1, sticky="W" )
+        self.minWordLength.grid(column=2, row=1, sticky="E", padx=15)
+        maxWords.grid(column=2, row=2, sticky="W")
+        self.numberOfWords.grid(column=2, row=2, sticky="E", padx=15)
+        self.includeNumbers.grid(column=2, row=3, sticky="w")
+        self.checkRepeatWords.grid(column=2, row=4, sticky="w")
         stopWords.grid(column=2, row=9)
         self.addStopWords.grid(column=2, row=10)
         button_addStopWord.grid(column=2, row=11)

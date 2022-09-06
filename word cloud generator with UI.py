@@ -604,8 +604,14 @@ class wordCloud:
         
     
     def exit(self):
-        logging.info("Exiting program")
-        self.root.destroy()
+        logging.info("Exit button clicked")
+        confirmBox = messagebox.askquestion('Exit Application', 'Are you sure you want to exit the application?', icon='warning')
+        if confirmBox == 'yes':
+            logging.info("Exiting program")
+            self.root.destroy()
+        else:
+            logging.info("Exit has been aborted")
+            messagebox.showinfo('Return', 'You will now return to the application screen')
 
 logging.basicConfig(filename='Word Cloud.log', 
                     filemode='a', 

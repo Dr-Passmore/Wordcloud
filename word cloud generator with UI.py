@@ -570,38 +570,41 @@ class wordCloud:
     
     def reset(self):
         logging.info("Reset all settings has been pressed")
-        self.minWordLength.set(3)
-        self.widthInput.delete(0, 'end')
-        self.heightInput.delete(0, 'end')
-        self.heightInput.insert(0, 1280)
-        self.widthInput.insert(0, 1920)
-        self.stopwords = set(STOPWORDS)
-        self.image_mask = None
-        self.cloud = None
-        self.backgroundColour = None
-        self.backgroundColourLabel.config(text="Background Colour Selection")
-        self.backgroundColourexample.config(background="SystemButtonFace")
-        self.addedStopWords.config(text = "No words added")
-        self.numberOfWords.delete(0, 'end')
-        self.numberOfWords.insert(0, 200)
-        self.textFile = open(os.path.join(self.directory, r'Text\Corbyn Conference Speeches 2015-2019.txt'), encoding="utf-8").read()
-        self.Image = 'Pictures\\Cat_Silhouette_PNG_Transparent_Clip_Art_Image.png'
-        self.selectFile = r'Text\Corbyn Conference Speeches 2015-2019.txt'
-        wordCloud.numberOfWords(self)
-        head, tail = os.path.split(self.Image)
-        self.selectedImage.config(text = "Image selection is \n{}".format(tail))
-        head, tail = os.path.split(self.selectFile)
-        self.wordCount.config(text="Selected text file is \n{} \nand contains {} words".format(tail,  self.totalWordCount))
-        self.checkRecolour.deselect()
-        self.checkShape.deselect()
-        self.includeNumbers.deselect()
-        self.checkRepeatWords.deselect()
-        self.textColourChange = False
-        self.colourType.current(0)
-        self.colourRange.config(value = self.colourSet1)
-        self.colourRange.current(0)
-        logging.info("All settings reset back to default values")
-        
+        confirmBox = messagebox.askquestion('Reset Settings', 'Are you sure you want to reset all settings to default values?', icon='warning')
+        if confirmBox == "yes":
+            self.minWordLength.set(3)
+            self.widthInput.delete(0, 'end')
+            self.heightInput.delete(0, 'end')
+            self.heightInput.insert(0, 1280)
+            self.widthInput.insert(0, 1920)
+            self.stopwords = set(STOPWORDS)
+            self.image_mask = None
+            self.cloud = None
+            self.backgroundColour = None
+            self.backgroundColourLabel.config(text="Background Colour Selection")
+            self.backgroundColourexample.config(background="SystemButtonFace")
+            self.addedStopWords.config(text = "No words added")
+            self.numberOfWords.delete(0, 'end')
+            self.numberOfWords.insert(0, 200)
+            self.textFile = open(os.path.join(self.directory, r'Text\Corbyn Conference Speeches 2015-2019.txt'), encoding="utf-8").read()
+            self.Image = 'Pictures\\Cat_Silhouette_PNG_Transparent_Clip_Art_Image.png'
+            self.selectFile = r'Text\Corbyn Conference Speeches 2015-2019.txt'
+            wordCloud.numberOfWords(self)
+            head, tail = os.path.split(self.Image)
+            self.selectedImage.config(text = "Image selection is \n{}".format(tail))
+            head, tail = os.path.split(self.selectFile)
+            self.wordCount.config(text="Selected text file is \n{} \nand contains {} words".format(tail,  self.totalWordCount))
+            self.checkRecolour.deselect()
+            self.checkShape.deselect()
+            self.includeNumbers.deselect()
+            self.checkRepeatWords.deselect()
+            self.textColourChange = False
+            self.colourType.current(0)
+            self.colourRange.config(value = self.colourSet1)
+            self.colourRange.current(0)
+            logging.info("All settings reset back to default values")
+        else:
+            logging.info("Reset has been aborted")
     
     def exit(self):
         logging.info("Exit button clicked")
@@ -611,7 +614,6 @@ class wordCloud:
             self.root.destroy()
         else:
             logging.info("Exit has been aborted")
-            messagebox.showinfo('Return', 'You will now return to the application screen')
 
 logging.basicConfig(filename='Word Cloud.log', 
                     filemode='a', 

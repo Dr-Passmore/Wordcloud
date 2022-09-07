@@ -23,7 +23,7 @@ class wordCloud:
             os.makedirs(r'Text')
         if not os.path.exists(r'WordClouds'):
             os.makedirs(r'WordClouds')
-        self.textFile = open(os.path.join(self.directory, r'Text\Corbyn Conference Speeches 2015-2019.txt'), encoding="utf-8").read()
+        self.textFile = open(os.path.join(self.directory, r'Text\PhD thesis.txt'), encoding="utf-8").read()
         self.outputImage = None
         self.Image = 'Pictures\\Cat_Silhouette.png'
         self.stopwords = set(STOPWORDS)
@@ -32,7 +32,7 @@ class wordCloud:
         self.backgroundColour = None
         self.textColourChange = False
         self.colourSelected = "viridis"
-        self.selectFile = r'Text\Corbyn Conference Speeches 2015-2019.txt'
+        self.selectFile = r'Text\PhD thesis.txt'
         wordCloud.numberOfWords(self)
         wordCloud.userInterface(self)  
         
@@ -628,9 +628,9 @@ class wordCloud:
             self.addedStopWords.config(text = "No words added")
             self.numberOfWords.delete(0, 'end')
             self.numberOfWords.insert(0, 200)
-            self.textFile = open(os.path.join(self.directory, r'Text\Corbyn Conference Speeches 2015-2019.txt'), encoding="utf-8").read()
+            self.textFile = open(os.path.join(self.directory, r'Text\PhD thesis.txt'), encoding="utf-8").read()
             self.Image = 'Pictures\\Cat_Silhouette.png'
-            self.selectFile = r'Text\Corbyn Conference Speeches 2015-2019.txt'
+            self.selectFile = r'Text\PhD thesis.txt'
             wordCloud.numberOfWords(self)
             head, tail = os.path.split(self.Image)
             self.selectedImage.config(text = "Image selection is \n{}".format(tail))

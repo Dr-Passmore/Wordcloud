@@ -13,7 +13,6 @@ Install the required modules using the requirements.txt file.
 ## How to use
 
 The program runs with a UI created in tkinter.
-![UI layout](example.PNG)
 
 On the top left you can select the text file (either a txt or PDF file).
 **Note: PDFs are more challenging to extract text from and as a result will show as having a far higher word count**

@@ -320,6 +320,30 @@ class wordCloud:
         else:
             self.selectedImage.config(text = "Image selection is \n{}".format(tail))
             logging.info("The selected image is {}".format(tail))
+            im = np.array(Image.open(os.path.join(self.Image)))
+            updated = False
+            self.widthInput.delete(0, 'end')
+            self.heightInput.delete(0, 'end')
+            self.heightInput.insert(0, 1280)
+            self.widthInput.insert(0, 1920)
+            width = int(self.widthInput.get())
+            height = int(self.heightInput.get())
+            logging.info("Checking image width - {} - and image height - {}".format(width, height))
+            if im.shape[1] < width:
+                self.widthInput.delete(0, 'end')
+                self.widthInput.insert(0, im.shape[1])
+                logging.warning("Image selected width is smaller than current canvas. Resizing to {}".format(im.shape[1]))
+                updated = True
+            if im.shape[0] < height:
+                self.heightInput.delete(0, 'end')
+                self.heightInput.insert(0, im.shape[0])
+                logging.warning("Image selected height is smaller than current canvas. Resizing to {}".format(im.shape[0]))
+                updated = True
+            if updated == True:
+                logging.warning("Canvas resized")
+                messagebox.showerror("Canvas Resized", "Canvas has been resized due to image selected. \nIf you wish to recolour using image you cannot increase the canvas size")
+            else: 
+                logging.info("Image selected fits the current canvas settings")
             return self.Image
         
     def selectText(self):

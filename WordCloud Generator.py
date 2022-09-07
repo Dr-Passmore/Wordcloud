@@ -351,7 +351,7 @@ class wordCloud:
     
     def selectText(self):
         self.selectFile = filedialog.askopenfilename(
-            initialdir = r"/Text/",
+            initialdir = r"Text",
             title = "Select Text File",
             filetypes = [("text files", "*.txt"), ("PDF files", '*.pdf')]
             )
@@ -562,8 +562,6 @@ class wordCloud:
                 colormap=self.colourSelected,
             )
             self.cloud.generate(self.textFile)
-            #self.height = "1280"
-            #self.width = "1920"
             logging.info("Generated Word Cloud")
             if self.textColourChange == True:
                 logging.info("recolouring wordcloud based on image")
@@ -666,5 +664,3 @@ logging.basicConfig(filename='Word Cloud.log',
                     datefmt='%Y-%m-%d %H:%M:%S')
 
 wordCloud()
-
-#wordCloud.generateCloud(wordCloud.textFile)

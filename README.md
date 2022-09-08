@@ -14,7 +14,7 @@ Install the required modules using the requirements.txt file.
 
 The program runs with a UI created in tkinter.
 
-On the top left you can select the text file (either a txt or PDF file).
+On the top left you can select the text file (either a txt or PDF file). Defaulted to ['Text\PhD thesis - Dr Passmore.txt'](https://ore.exeter.ac.uk/repository/handle/10871/30021)
 **Note: PDFs are more challenging to extract text from and as a result will show as having a far higher word count**
 
 On the left you can select the image. This can be used to recolour text using the image or create the wordcloud within the boundaries of the image (White or Transparent backgrounds). In addition, you can tick both options to recolour within a set area.
@@ -34,3 +34,7 @@ In addition, under maximum number of words you can select whether you want to al
 The final key setting is STOPWORDS. You can add additional STOPWORDs. For example, if you were using text from a novel you may wish to remove word "said". You can add a range of STOPWORDS as required and reset back to the default STOPWORDS at a click of a button.
 
 Finally, we have a reset button, that resets everything back to default values, and the exit button to close the program.
+
+## Additional information
+
+Thanks to [Clobber Creations](https://www.clobbercreations.co.uk/) for sharing images for recolour testing.
